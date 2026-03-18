@@ -2,7 +2,7 @@ package eggroll.pet;
 
 import eggroll.pet.petstate.PetState;
 
-abstract public class Pet {
+abstract public class Pet implements IPet{
     private String name;
     private String species;
     private PetState state;
@@ -79,5 +79,8 @@ abstract public class Pet {
     }
     public void growOlder(){
         this.age += 1; // maybe would be cute, you can know how old your pet is.
+    }
+    public void play(){
+        //TODO: implement playing
     }
 }
