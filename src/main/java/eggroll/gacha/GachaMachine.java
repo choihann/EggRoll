@@ -12,11 +12,13 @@ public abstract class GachaMachine {
 
     public Pet pullOne(){
         // TODO: return a random pet in an unborn egg state by calling petfactory's createpet
-        // potentially given a rarity enum
+        // potentially given a rarity enum? and a pet type?
     };
     public Pet pullFive(){
         // TODO: return 5 pets instead of one
     }
     abstract public PetRarity detertimePetRarity();
     // called by pull, based off of this gacha machine's particular rates and available pets
+
+    public getPet();
 }

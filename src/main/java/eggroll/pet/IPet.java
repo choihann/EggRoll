@@ -1,7 +1,7 @@
 package eggroll.pet;
 
 public interface IPet {
-    void doAction();
+    public boolean doActivity();
     public void sleep();
     public void eat();
     public void exercise();
