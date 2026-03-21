@@ -2,18 +2,25 @@ package eggroll.pet;
 
 import eggroll.pet.petstate.PetState;
 
+import java.util.Random;
+
 abstract public class Pet implements IPet{
-    private String name;
-    private String species;
-    private PetState state;
-    private PetRarity rarity;
-    private boolean needsPenalty;
-    private int hygiene;
-    private int happiness;
-    private int hunger;
-    private int fitness;
-    private int energy;
-    private int age;
+    protected static int DEFAULT_MAX_STAT = 5;
+
+    protected String name;
+    protected String species;
+    protected PetState state;
+    protected PetRarity rarity;
+    protected PetPersonality personality;
+    protected boolean needsPenalty;
+    protected int hygiene;
+    protected int happiness;
+    protected int fullness;
+    protected int fitness;
+    protected int energy;
+    protected int age;
+
+    private Random random = new Random(); // will have to encapsulate this, is used for random decreases
 
     public String getName(){
         return this.name;
@@ -30,14 +37,15 @@ abstract public class Pet implements IPet{
     public boolean needsPenalty(){
         return this.needsPenalty;
     }
+    public PetPersonality getPetPersonality(){ return this.personality; }
     public int getHygieneStat(){
         return this.hygiene;
     }
     public int getHappinessStat(){
         return this.happiness;
     }
-    public int getHungerStat(){
-        return this.hunger;
+    public int getFullnessStat(){
+        return this.fullness;
     }
     public int getFitnessStat(){
         return this.fitness;
@@ -61,26 +69,131 @@ abstract public class Pet implements IPet{
     // and a 2nd argument to determine which type of penalty to perform
     // penalty could be - hygiene
     // this method could be invoked when an activity fails and when happiness stat is low.
+    // or if a pet's stat is low at the end of the day.
 
     public void sleep(){
         //TODO: implement sleeping
+        energy += 1;
     }
     public void eat(){
         //TODO: implement eating
+        fullness += 1;
     }
     public void exercise(){
         //TODO: implement exercising
+        fitness += 1;
     }
     public void bathe(){
         //TODO: implement bathing
+        hygiene += 1;
     }
     public void evolve(){
         //TODO: implement evolving
     }
+
+    protected static int DEFAULT_MAX_STAT = 5;
+
+    public void recoverRandomStat(int amount) {
+        if (hygiene == DEFAULT_MAX_STAT &&
+                happiness == DEFAULT_MAX_STAT &&
+                fullness == DEFAULT_MAX_STAT &&
+                fitness == DEFAULT_MAX_STAT &&
+                energy == DEFAULT_MAX_STAT) {
+            return;
+        }
+
+        while (true) {
+            int choice = (int)(Math.random() * 5);
+
+            switch (choice) {
+                case 0:
+                    if (hygiene < DEFAULT_MAX_STAT) {
+                        hygiene = Math.min(DEFAULT_MAX_STAT, hygiene + amount);
+                        return;
+                    }
+                    break;
+
+                case 1:
+                    if (happiness < DEFAULT_MAX_STAT) {
+                        happiness = Math.min(DEFAULT_MAX_STAT, happiness + amount);
+                        return;
+                    }
+                    break;
+
+                case 2:
+                    if (fullness < DEFAULT_MAX_STAT) {
+                        fullness = Math.min(DEFAULT_MAX_STAT, fullness + amount);
+                        return;
+                    }
+                    break;
+
+                case 3:
+                    if (fitness < DEFAULT_MAX_STAT) {
+                        fitness = Math.min(DEFAULT_MAX_STAT, fitness + amount);
+                        return;
+                    }
+                    break;
+
+                case 4:
+                    if (energy < DEFAULT_MAX_STAT) {
+                        energy = Math.min(DEFAULT_MAX_STAT, energy + amount);
+                        return;
+                    }
+                    break;
+            }
+        }
+    }
+
+    public void lowerRandomStat(int amount) {
+        if (hygiene == 0 && happiness == 0 && fullness == 0 && fitness == 0 && energy == 0) {
+            return;
+        }
+
+        while (true) {
+            int choice = (int)(Math.random() * 5);
+
+            switch (choice) {
+                case 0:
+                    if (hygiene > 0) {
+                        hygiene = Math.max(0, hygiene - amount);
+                        return;
+                    }
+                    break;
+                case 1:
+                    if (happiness > 0) {
+                        happiness = Math.max(0, happiness - amount);
+                        return;
+                    }
+                    break;
+                case 2:
+                    if (fullness > 0) {
+                        fullness = Math.max(0, fullness - amount);
+                        return;
+                    }
+                    break;
+                case 3:
+                    if (fitness > 0) {
+                        fitness = Math.max(0, fitness - amount);
+                        return;
+                    }
+                    break;
+                case 4:
+                    if (energy > 0) {
+                        energy = Math.max(0, energy - amount);
+                        return;
+                    }
+                    break;
+            }
+        }
+    }
+
     public void growOlder(){
         this.age += 1; // maybe would be cute, you can know how old your pet is.
     }
     public void play(){
-        //TODO: implement playing
+        if(happiness >= DEFAULT_MAX_STAT){
+            happiness += 1;
+        }
+        lowerRandomStat(1); //happiness is a valuable stat, so playing has to come at a cost..
     }
 }
