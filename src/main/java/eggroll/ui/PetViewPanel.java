@@ -118,10 +118,10 @@ public class PetViewPanel extends JPanel {
         hungerBar = new StatBar("🍖 Hunger", Theme.ACCENT_TERRA);
         happinessBar = new StatBar("😊 Happy", Theme.ACCENT_AMBER);
         energyBar = new StatBar("⚡ Energy", Theme.ACCENT_PERIWINKLE);
+        xpBar = new StatBar("✨ XP", Theme.ACCENT_ROSE);
 
         JPanel xpRow = new JPanel(new BorderLayout(Theme.PAD_SM, 0));
         xpRow.setOpaque(false);
-        xpBar = new StatBar("✨ XP", Theme.ACCENT_ROSE);
         levelLabel = new JLabel("Lv.1");
         levelLabel.setFont(Theme.FONT_CAPTION);
         levelLabel.setForeground(Theme.TEXT_MUTED);
