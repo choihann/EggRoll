@@ -4,10 +4,28 @@ import eggroll.pet.petstate.UnbornState;
 
 public class Cat extends Pet{
     static protected String DEFAULT_CAT_NAME = "Mittens";
-    private final Integer MAX_ENERGY = 7;
+    private final Integer UNIQUE_MAX_ENERGY = 7;
 
     public Cat(String name, String species, PetRarity rarity, PetPersonality personality) {
         super(name, species, rarity, personality);
+    }
+
+    public Cat(){
+        this.name = DEFAULT_CAT_NAME;
+        this.species = "Cat";
+        this.rarity = PetRarity.Common;
+        this.personality = PetPersonality.LAZY;
+
+        this.hygiene = DEFAULT_STARTING_STAT;
+        this.happiness = DEFAULT_STARTING_STAT;
+        this.fullness = DEFAULT_STARTING_STAT;
+        this.fitness = DEFAULT_STARTING_STAT;
+        this.energy = DEFAULT_STARTING_STAT;
+
+        this.currentState = unbornState;
+        this.age = 0;
+        this.needsPenalty = false;
+        this.isEgg = true;
     }
 
     @Override
@@ -29,7 +47,7 @@ public class Cat extends Pet{
 
     @Override
     public void nap(){
-        currentState.nap(MAX_ENERGY);
+        currentState.nap(UNIQUE_MAX_ENERGY);
     }
 
 }
