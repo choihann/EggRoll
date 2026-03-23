@@ -11,8 +11,8 @@ import java.util.List;
 public class CollectionPanel extends JPanel {
 
     private final JPanel gridPanel;
-    private final JLabel emptyLabel;
-    private final JLabel countLabel;
+    private final JLabel noPetsLabel;
+    private final JLabel countPetsLabel;
     private PetSelectListener selectListener;
 
     // this is just to keep panel and game logic decoupled
@@ -41,21 +41,21 @@ public class CollectionPanel extends JPanel {
         headerRow.setOpaque(false);
         headerRow.add(UIComponents.sectionHeader("Collection"), BorderLayout.WEST);
 
-        countLabel = new JLabel("0 pets");
-        countLabel.setFont(Theme.FONT_CAPTION);
-        countLabel.setForeground(Theme.TEXT_MUTED);
-        headerRow.add(countLabel, BorderLayout.EAST);
+        countPetsLabel = new JLabel("0 pets");
+        countPetsLabel.setFont(Theme.FONT_CAPTION);
+        countPetsLabel.setForeground(Theme.TEXT_MUTED);
+        headerRow.add(countPetsLabel, BorderLayout.EAST);
         add(headerRow, BorderLayout.NORTH);
 
         // scrollable grid
         gridPanel = new JPanel(new UIComponents.WrapLayout(FlowLayout.LEFT, Theme.PAD_SM, Theme.PAD_SM));
         gridPanel.setBackground(Theme.BG_BASE);
 
-        emptyLabel = new JLabel("No pets yet; roll the gacha to get started!", SwingConstants.CENTER);
-        emptyLabel.setFont(Theme.FONT_BODY);
-        emptyLabel.setForeground(Theme.TEXT_MUTED);
-        emptyLabel.setBorder(BorderFactory.createEmptyBorder(Theme.PAD_XL, 0, Theme.PAD_XL, 0));
-        gridPanel.add(emptyLabel);
+        noPetsLabel = new JLabel("No pets yet; roll the gacha to get started!", SwingConstants.CENTER);
+        noPetsLabel.setFont(Theme.FONT_BODY);
+        noPetsLabel.setForeground(Theme.TEXT_MUTED);
+        noPetsLabel.setBorder(BorderFactory.createEmptyBorder(Theme.PAD_XL, 0, Theme.PAD_XL, 0));
+        gridPanel.add(noPetsLabel);
 
         JScrollPane scroll = new JScrollPane(gridPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scroll.setOpaque(false);
@@ -74,10 +74,10 @@ public class CollectionPanel extends JPanel {
         gridPanel.removeAll();
 
         if (pets == null || pets.isEmpty()) {
-            gridPanel.add(emptyLabel);
-            countLabel.setText("0 pets");
+            gridPanel.add(noPetsLabel);
+            countPetsLabel.setText("0 pets");
         } else {
-            countLabel.setText(pets.size() + " pet" + (pets.size() == 1 ? "" : "s"));
+            countPetsLabel.setText(pets.size() + " pet" + (pets.size() == 1 ? "" : "s"));
             for (PetCardData data : pets) {
                 gridPanel.add(buildPetCard(data));
             }

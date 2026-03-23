@@ -2,14 +2,27 @@ package eggroll.pet;
 
 import eggroll.pet.petstate.PetState;
 
+import java.util.Queue;
 import java.util.Random;
 
 abstract public class Pet implements IPet{
-    protected static int DEFAULT_MAX_STAT = 5;
+    protected final static int DEFAULT_MAX_STAT = 5;
+    protected final static int DEFAULT_MINIMUM_STAT = 2;
+
+    protected PetState unbornState;
+    protected PetState normalState;
+    protected PetState dirtyState;
+    protected PetState tiredState;
+    protected PetState sadState;
+    protected PetState unfitState;
+    protected PetState hungryState;
+
+    protected PetState currentState;
+
+    protected Queue<PetState> queuedStates;
 
     protected String name;
     protected String species;
-    protected PetState state;
     protected PetRarity rarity;
     protected PetPersonality personality;
     protected boolean needsPenalty;
@@ -20,6 +33,8 @@ abstract public class Pet implements IPet{
     protected int energy;
     protected int age;
 
+    protected boolean isEgg;
+
     private Random random = new Random(); // will have to encapsulate this, is used for random decreases
 
     public String getName(){
@@ -29,7 +44,7 @@ abstract public class Pet implements IPet{
         return this.species;
     }
     public PetState getPetState(){
-        return this.state;
+        return this.currentState;
     }
     public PetRarity getRarity(){
         return this.rarity;
@@ -57,7 +72,31 @@ abstract public class Pet implements IPet{
     public int getAge(){
         return this.age;
     }
+    public PetState getUnbornState(){
+        return this.unbornState;
+    }
+    public PetState getNormalState(){
+        return this.normalState;
+    }
+    public PetState getDirtyState(){
+        return this.dirtyState;
+    }
+    public PetState getSadState(){
+        return this.sadState;
+    }
+    public PetState getTiredState(){
+        return this.tiredState;
+    }
+    public PetState getUnfitState(){
+        return this.unfitState;
+    }
+    public PetState getCurrentState(){
+        return this.currentState;
+    }
 
+    public void setCurrentState(PetState currentState) {
+        this.currentState = currentState;
+    }
 
     abstract public boolean doActivity();
     // return a bool that indicates whether the activity was "successful" or not?
@@ -65,33 +104,44 @@ abstract public class Pet implements IPet{
     // i.e. if a pet likes to laze around, maybe it gets extra stinky because it didn't shower.
 
     abstract public boolean applyPenalty(boolean needsPenalty);
-    // need a better bool name?
-    // and a 2nd argument to determine which type of penalty to perform
-    // penalty could be - hygiene
-    // this method could be invoked when an activity fails and when happiness stat is low.
-    // or if a pet's stat is low at the end of the day.
 
-    public void sleep(){
-        //TODO: implement sleeping
-        energy += 1;
-    }
-    public void eat(){
-        //TODO: implement eating
-        fullness += 1;
-    }
-    public void exercise(){
-        //TODO: implement exercising
-        fitness += 1;
-    }
-    public void bathe(){
-        //TODO: implement bathing
-        hygiene += 1;
-    }
-    public void evolve(){
-        //TODO: implement evolving
+    public void increaseStat(int amount, String type) {
+        switch (type.toLowerCase()) {
+            case "happiness":
+                this.happiness += amount;
+            case "fitness":
+                this.fitness += amount;
+            case "energy":
+                this.energy += amount;
+            case "age":
+                this.age += amount;
+            case "fullness":
+                this.fullness += amount;
+            case "hygiene":
+                this.hygiene += amount;
+            default:
+                return;
+        }
     }
 
-    protected static int DEFAULT_MAX_STAT = 5;
+    public void decreaseStat(int amount, String type) {
+        switch (type.toLowerCase()) {
+            case "happiness":
+                this.happiness -= amount;
+            case "fitness":
+                this.fitness -= amount;
+            case "energy":
+                this.energy -= amount;
+            case "age":
+                this.age -= amount;
+            case "fullness":
+                this.fullness -= amount;
+            case "hygiene":
+                this.hygiene -= amount;
+            default:
+                return;
+        }
+    }
 
     public void recoverRandomStat(int amount) {
         if (hygiene == DEFAULT_MAX_STAT &&
@@ -144,6 +194,13 @@ abstract public class Pet implements IPet{
         }
     }
 
+    public boolean isStatMax(){
+        if(this.happiness >= DEFAULT_MAX_STAT){
+            return true;
+        }
+        return false;
+    }
+
     public void lowerRandomStat(int amount) {
         if (hygiene == 0 && happiness == 0 && fullness == 0 && fitness == 0 && energy == 0) {
             return;
@@ -188,12 +245,58 @@ abstract public class Pet implements IPet{
     }
 
     public void growOlder(){
-        this.age += 1; // maybe would be cute, you can know how old your pet is.
+        this.age += 1;
+    }
+
+    public void nap(){
+        currentState.nap(DEFAULT_MAX_STAT);
+    }
+    public void eat(){
+        currentState.eat(DEFAULT_MAX_STAT);
+    }
+    public void exercise(){
+        currentState.exercise(DEFAULT_MAX_STAT);
     }
     public void play(){
-        if(happiness >= DEFAULT_MAX_STAT){
-            happiness += 1;
-        }
-        lowerRandomStat(1); //happiness is a valuable stat, so playing has to come at a cost..
+        currentState.play(DEFAULT_MAX_STAT);
     }
+    public void bathe(){
+        currentState.bathe(DEFAULT_MAX_STAT);
+    }
+    public void evolve(){
+        currentState.evolve(DEFAULT_MAX_STAT);
+    };
+
+    public void pushToQueuedStates(PetState state){
+        if(isEgg){
+            this.queuedStates.add(unbornState);
+            return; //eggs can't be in any other state.
+        }
+        if(hygiene <= DEFAULT_MINIMUM_STAT){
+            this.queuedStates.add(dirtyState);
+        }
+        if(fullness <= DEFAULT_MINIMUM_STAT){
+            this.queuedStates.add(hungryState);
+        }
+        if(energy <= DEFAULT_MINIMUM_STAT){
+            this.queuedStates.add(tiredState);
+        }
+        if(fitness <= DEFAULT_MINIMUM_STAT){
+            this.queuedStates.add(unfitState);
+        }
+        if(happiness <= DEFAULT_MINIMUM_STAT){
+            this.queuedStates.add(sadState);
+        }
+        if(
+            hygiene > DEFAULT_MINIMUM_STAT &&
+            energy > DEFAULT_MINIMUM_STAT &&
+            fullness > DEFAULT_MINIMUM_STAT &&
+            fitness > DEFAULT_MINIMUM_STAT &&
+            happiness > DEFAULT_MINIMUM_STAT
+        ){
+            this.queuedStates.add(normalState);
+        }
+    }
+
+    public abstract boolean checkIfNeedsPenalty();
 }

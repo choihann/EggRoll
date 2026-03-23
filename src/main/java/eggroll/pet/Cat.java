@@ -9,9 +9,7 @@ public class Cat extends Pet{
     public Cat(){
         this.personality = PetPersonality.LAZY;
         this.name = DEFAULT_CAT_NAME;
-        this.state = UnbornState(); // (???) no idea how to initialize state yet
         this.species = "Cat";
-        //UNSURE if initializing a cat egg's stats is its' state's job or the cat's job
         this.needsPenalty = false;
         this.rarity = PetRarity.Common;
     }
@@ -27,6 +25,14 @@ public class Cat extends Pet{
     public boolean applyPenalty(boolean needsPenalty) {
         if(needsPenalty){
             happiness =- 1;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkIfNeedsPenalty(){
+        if(hygiene == 0 || fitness == 0 || fullness == 0 || energy == 1){
             return true;
         }
         return false;
