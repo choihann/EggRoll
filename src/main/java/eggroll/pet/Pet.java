@@ -1,13 +1,16 @@
 package eggroll.pet;
 
 import eggroll.pet.petstate.PetState;
+import eggroll.pet.petstate.UnbornState;
 
 import java.util.Queue;
 import java.util.Random;
 
 abstract public class Pet implements IPet{
+    protected final static int DEFAULT_STARTING_STAT = 3;
     protected final static int DEFAULT_MAX_STAT = 5;
     protected final static int DEFAULT_MINIMUM_STAT = 2;
+    protected final static int DEFAULT_STAT_INCREMENT = 1;
 
     protected PetState unbornState;
     protected PetState normalState;
@@ -36,6 +39,24 @@ abstract public class Pet implements IPet{
     protected boolean isEgg;
 
     private Random random = new Random(); // will have to encapsulate this, is used for random decreases
+
+    public Pet(String name, String species, PetRarity rarity, PetPersonality personality) {
+        this.name = name;
+        this.species = species;
+        this.rarity = rarity;
+        this.personality = personality;
+
+        this.hygiene = DEFAULT_STARTING_STAT;
+        this.happiness = DEFAULT_STARTING_STAT;
+        this.fullness = DEFAULT_STARTING_STAT;
+        this.fitness = DEFAULT_STARTING_STAT;
+        this.energy = DEFAULT_STARTING_STAT;
+
+        this.currentState = unbornState;
+        this.age = 0;
+        this.needsPenalty = false;
+        this.isEgg = true;
+    }
 
     public String getName(){
         return this.name;
@@ -292,11 +313,15 @@ abstract public class Pet implements IPet{
             energy > DEFAULT_MINIMUM_STAT &&
             fullness > DEFAULT_MINIMUM_STAT &&
             fitness > DEFAULT_MINIMUM_STAT &&
-            happiness > DEFAULT_MINIMUM_STAT
-        ){
-            this.queuedStates.add(normalState);
+            happiness > DEFAULT_MINIMUM_STAT){
+                this.queuedStates.add(normalState);
         }
     }
 
-    public abstract boolean checkIfNeedsPenalty();
+    public boolean checkIfNeedsPenalty(){
+        if(currentState != normalState && !isEgg){
+            return false;
+        }
+        return true;
+    }
 }
