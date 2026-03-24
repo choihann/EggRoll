@@ -9,7 +9,6 @@
 **Factory Pattern**
 * Pet factory is a master class acting as an interface for other classes so that concrete pet classes can be instantiated with individual behaviors and custom fields.
 * GachaMachine objects will call on petfactories to return new pet objects to dispense
-* Game may call on petfactories to instantiate 2nd tier versions of pets to replace their 1st tier version, emulating pet evolution.
 
 **State Pattern**
 * PetState governs particular state-dependent methods and allows pets to change their internal state.
@@ -20,4 +19,4 @@
 * Commands abstract away the many functions that have to execute in order for a player to functionally make an action.
 * For example, when a player wants to "Bathe" their pet, many pieces have to execute.
 * The game has to process the action, check for penalties, apply those penalties, increase the pet stats, check if pets should enter different states, etc.
-* All these issues are encapsulated into a BatheCommand.
+* All these issues are encapsulated into a BatheCommand, likewise for other player actions taking care of pets.
