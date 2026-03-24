@@ -14,7 +14,7 @@ public class DayManager {
 
     public void executeAction(Command command, Pet activePet) {
         if (state.actionsRemaining <= 0) {
-            System.out.println("[TurnManager] No actions remaining — advance the day first.");
+            System.out.println("[DayManager] No actions remaining — advance the day first.");
             return;
         }
 
@@ -34,7 +34,7 @@ public class DayManager {
     private void advanceDay(Pet activePet) {
         state.dayCount++;
         state.actionsRemaining = ACTIONS_PER_DAY;
-        System.out.println("[TurnManager] Day " + state.dayCount + " begins!");
+        System.out.println("[DayManager] Day " + state.dayCount + " begins!");
     }
 
     public int getActionsRemaining() {
