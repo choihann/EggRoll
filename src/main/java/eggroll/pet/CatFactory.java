@@ -26,8 +26,8 @@ public class CatFactory extends PetFactory{
     }
 
     private Pet makeCat(String species, PetRarity rarity) {
-        return switch (species) {
-            case "Cat" -> new Cat();
+        return switch (species.toLowerCase()) {
+            case "cat" -> new Cat();
             default -> new Cat(); // populate this once we have more species of cat
         };
 

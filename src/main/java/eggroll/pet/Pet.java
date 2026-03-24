@@ -11,6 +11,7 @@ abstract public class Pet implements IPet{
     protected final static int DEFAULT_MAX_STAT = 5;
     protected final static int DEFAULT_MINIMUM_STAT = 2;
     protected final static int DEFAULT_STAT_INCREMENT = 1;
+    protected final static int DEFAULT_EVOLUTION_AGE = 5;
 
     protected PetState unbornState;
     protected PetState normalState;
@@ -137,6 +138,24 @@ abstract public class Pet implements IPet{
 
     public void setCurrentState(PetState currentState) {
         this.currentState = currentState;
+    }
+    public void setStat(int amount, String type){
+        switch (type.toLowerCase()) {
+            case "happiness":
+                this.happiness = amount;
+            case "fitness":
+                this.fitness = amount;
+            case "energy":
+                this.energy = amount;
+            case "age":
+                this.age = amount;
+            case "fullness":
+                this.fullness = amount;
+            case "hygiene":
+                this.hygiene = amount;
+            default:
+                return;
+        }
     }
 
     abstract public boolean doActivity();
@@ -283,6 +302,13 @@ abstract public class Pet implements IPet{
                     break;
             }
         }
+    }
+
+    public boolean canEvolve() {
+        if(this.currentState == normalState && this.age >= DEFAULT_EVOLUTION_AGE){
+            return true;
+        }
+        return false;
     }
 
     public void growOlder(){
