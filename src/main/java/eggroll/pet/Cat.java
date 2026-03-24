@@ -1,7 +1,5 @@
 package eggroll.pet;
 
-import eggroll.pet.petstate.UnbornState;
-
 public class Cat extends Pet{
     static protected String DEFAULT_CAT_NAME = "Mittens";
     private final Integer UNIQUE_MAX_ENERGY = 7;
@@ -47,7 +45,9 @@ public class Cat extends Pet{
 
     @Override
     public void nap(){
-        currentState.nap(UNIQUE_MAX_ENERGY);
+        if (currentState != null) {
+            currentState.nap(UNIQUE_MAX_ENERGY);
+        }
     }
 
 }
