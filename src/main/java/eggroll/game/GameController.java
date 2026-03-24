@@ -153,7 +153,7 @@ public class GameController {
     private Pet activePet() {
         if (state.ownedPets == null || state.activePetName == null) return null;
         return state.ownedPets.stream()
-                .filter(p -> state.activePetName.equals(p.getName()))
+                .filter(pet -> state.activePetName.equals(pet.getName()))
                 .findFirst().orElse(null);
     }
 
