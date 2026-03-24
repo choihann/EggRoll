@@ -1,5 +1,6 @@
 package eggroll.gacha;
 
+import eggroll.gamepersistence.GameState;
 import eggroll.pet.Pet;
 import eggroll.pet.PetFactory;
 import eggroll.pet.PetRarity;
@@ -8,29 +9,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class GachaMachine {
+    public static final int COST_ONE_PULL = 100;
+    public static final int COST_TEN_PULL = 950;
     private final PetFactory petFactory;
+    private final GameState gameState;
     private String description;
     private String title;
 
-    protected GachaMachine(PetFactory petFactory, String title, String description) {
+    protected GachaMachine(PetFactory petFactory, GameState gameState, String title, String description) {
         this.petFactory = petFactory;
+        this.gameState = gameState;
         this.title = title;
         this.description = description;
     }
 
-    public Pet pullOne(){
-        // TODO: return a random pet in an unborn egg state by calling petfactory's createpet
-        PetRarity rarity = determinePetRarity();
-        return petFactory.createPet(rarity);
-    };
+    public Pet pullOne() {
+        if (gameState.currency < COST_ONE_PULL) return null;
+        gameState.currency -= COST_ONE_PULL;
+        Pet pet = petFactory.createPet(determinePetRarity());
+        gameState.ownedPets.add(pet);
+        return pet;
+    }
 
-    public List<Pet> pullFive() {
-        // TODO: return 5 pets instead of one
-        List<Pet> gachaResults = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            gachaResults.add(pullOne());
+    public List<Pet> pullTen() {
+        if (gameState.currency < COST_TEN_PULL) return List.of();
+        gameState.currency -= COST_TEN_PULL;
+        List<Pet> results = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Pet pet = petFactory.createPet(determinePetRarity());
+            gameState.ownedPets.add(pet);
+            results.add(pet);
         }
-        return gachaResults;
+        return results;
     }
 
     public abstract PetRarity determinePetRarity();
@@ -42,6 +52,18 @@ public abstract class GachaMachine {
 
     public String getDescription() {
         return description;
+    }
+
+    public boolean canAffordOnePull() {
+        return gameState.currency >= COST_ONE_PULL;
+    }
+
+    public boolean canAffordTenPull() {
+        return gameState.currency >= COST_TEN_PULL;
+    }
+
+    public int getCurrency() {
+        return gameState.currency;
     }
 
 }

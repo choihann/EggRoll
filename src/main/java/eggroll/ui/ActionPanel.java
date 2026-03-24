@@ -73,28 +73,20 @@ public class ActionPanel extends JPanel {
     }
 
     // TODO: bind to the commands
-    public void setFeedAction(ActionListener l) {
-        feedBtn.addActionListener(l);
+    public void setFeedAction(ActionListener feedListener) {
+        feedBtn.addActionListener(feedListener);
     }
 
-    public void setPlayAction(ActionListener l) {
-        playBtn.addActionListener(l);
+    public void setPlayAction(ActionListener playListener) {
+        playBtn.addActionListener(playListener);
     }
 
-    public void setRestAction(ActionListener l) {
-        restBtn.addActionListener(l);
+    public void setNapAction(ActionListener napListener) {
+        restBtn.addActionListener(napListener);
     }
 
-    public void setBatheAction(ActionListener l) {
-        batheBtn.addActionListener(l);
-    }
-
-    public void setHealAction(ActionListener l) {
-        healBtn.addActionListener(l);
-    }
-
-    public void setTrainAction(ActionListener l) {
-        trainBtn.addActionListener(l);
+    public void setBatheAction(ActionListener batheListener) {
+        batheBtn.addActionListener(batheListener);
     }
 
     // TODO: configure which buttons given pet state

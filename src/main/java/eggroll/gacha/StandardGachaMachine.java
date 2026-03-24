@@ -1,5 +1,6 @@
 package eggroll.gacha;
 
+import eggroll.gamepersistence.GameState;
 import eggroll.pet.PetFactory;
 import eggroll.pet.PetRarity;
 
@@ -9,8 +10,8 @@ public class StandardGachaMachine extends GachaMachine {
 
     private final Random random = new Random();
 
-    public StandardGachaMachine(PetFactory factory) {
-        super(factory, "The Egg Gacha", "Roll for a mystery egg!");
+    public StandardGachaMachine(PetFactory factory, GameState gameState) {
+        super(factory, gameState, "The Egg Gacha", "Roll for a mystery egg!");
     }
 
     @Override

@@ -8,9 +8,9 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class GachaPanel extends JPanel {
-
-    private static final int ROLL_ONE_COST = 50;
-    private static final int ROLL_TEN_COST = 450;
+    // TODO: Sync the cost here with the gacha machine
+    private static final int ROLL_ONE_COST = 100;
+    private static final int ROLL_TEN_COST = 950;
 
     private buttonStyle rollOneBtn;
     private buttonStyle rollTenBtn;
@@ -18,7 +18,7 @@ public class GachaPanel extends JPanel {
     private JLabel resultName;
     private JLabel resultSpecies;
     private JLabel resultRarity;
-    private JLabel resultFlavour;
+    private JLabel resultFlavorText;
     private JLabel pityLabel;
     private JPanel resultCard;
 
@@ -56,7 +56,7 @@ public class GachaPanel extends JPanel {
         resultSpecies = centred("", Theme.FONT_BODY, Theme.TEXT_SECONDARY);
         resultRarity = UIComponents.rarityLabel("Common");
         resultRarity.setAlignmentX(CENTER_ALIGNMENT);
-        resultFlavour = centred("", new Font("Serif", Font.ITALIC, 13), Theme.TEXT_MUTED);
+        resultFlavorText = centred("", new Font("Serif", Font.ITALIC, 13), Theme.TEXT_MUTED);
 
         resultCard = new RoundedPanel(Theme.BG_CARD);
         resultCard.setLayout(new BoxLayout(resultCard, BoxLayout.Y_AXIS));
@@ -72,7 +72,7 @@ public class GachaPanel extends JPanel {
         resultCard.add(Box.createVerticalStrut(4));
         resultCard.add(resultRarity);
         resultCard.add(Box.createVerticalStrut(Theme.PAD_SM));
-        resultCard.add(resultFlavour);
+        resultCard.add(resultFlavorText);
         resultCard.setVisible(false);
 
         JPanel body = new JPanel();
@@ -116,7 +116,7 @@ public class GachaPanel extends JPanel {
         resultSpecies.setText(species);
         resultRarity.setText("- " + rarity);
         resultRarity.setForeground(Theme.rarityColour(rarity));
-        resultFlavour.setText(flavourText != null ? "\"" + flavourText + "\"" : "");
+        resultFlavorText.setText(flavourText != null ? "\"" + flavourText + "\"" : "");
         resultCard.setVisible(true);
         revalidate();
         repaint();
@@ -127,7 +127,7 @@ public class GachaPanel extends JPanel {
         pityLabel.setText("Pity: " + current + " / " + cap + " pulls until guaranteed Rare+");
     }
 
-    public void applyAffordability(int coins) {
+    public void applyCanAfford(int coins) {
         rollOneBtn.setEnabled(coins >= ROLL_ONE_COST);
         rollTenBtn.setEnabled(coins >= ROLL_TEN_COST);
     }
