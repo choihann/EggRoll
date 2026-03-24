@@ -1,7 +1,11 @@
+package eggroll.pets;
+
+import eggroll.pet.Pet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import eggroll.pet.Pet;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PetTest {
     Pet animalPet;
@@ -18,7 +22,7 @@ public class PetTest {
 
     @Test
     void testSpawnsInUnbornState() {
-        assertEquals(animalPet.unbornState, animalPet.getCurrentState);
+        assertEquals(animalPet.getUnbornState(), animalPet.getCurrentState());
     }
 
     @Test
@@ -38,7 +42,7 @@ public class PetTest {
     @Test
     void testIsStatMax(){
         animalPet.setStat(5, "happiness");
-        assertTrue(animalPet.isStatMax);
+        assertTrue(animalPet.isStatMax());
     }
 
 }
