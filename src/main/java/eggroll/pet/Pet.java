@@ -58,6 +58,26 @@ abstract public class Pet implements IPet{
         this.isEgg = true;
     }
 
+    protected Pet() {
+    }
+    public Pet(String name, PetRarity rarity) {
+        this.name = name;
+        this.species = "NULL";
+        this.rarity = rarity;
+        this.personality = PetPersonality.FOODIE;
+
+        this.hygiene = DEFAULT_STARTING_STAT;
+        this.happiness = DEFAULT_STARTING_STAT;
+        this.fullness = DEFAULT_STARTING_STAT;
+        this.fitness = DEFAULT_STARTING_STAT;
+        this.energy = DEFAULT_STARTING_STAT;
+
+        this.currentState = unbornState;
+        this.age = 0;
+        this.needsPenalty = false;
+        this.isEgg = true;
+    }
+
     public String getName(){
         return this.name;
     }
@@ -316,6 +336,11 @@ abstract public class Pet implements IPet{
             happiness > DEFAULT_MINIMUM_STAT){
                 this.queuedStates.add(normalState);
         }
+    }
+
+    public PetState popOffQueuedStates(){
+        PetState newPetState = queuedStates.poll();
+        return newPetState;
     }
 
     public boolean checkIfNeedsPenalty(){
