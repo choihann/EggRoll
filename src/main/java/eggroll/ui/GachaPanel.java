@@ -87,7 +87,7 @@ public class GachaPanel extends JPanel {
         pityLabel = centred("Pity: 0 / 50 pulls until guaranteed Rare+", Theme.FONT_CAPTION, Theme.TEXT_MUTED);
 
         // TODO: Replace with actual rates
-        JLabel ratesLabel = centred("<html><center>Rates: Common 60% - Uncommon 25% - Rare 10% - Epic 4% - Legendary 1%</center></html>", Theme.FONT_CAPTION, Theme.TEXT_MUTED);
+        JLabel ratesLabel = centred("<html><center>Rates: Common 50% - Rare 35% - Epic 15% </center></html>", Theme.FONT_CAPTION, Theme.TEXT_MUTED);
 
         JPanel footer = new JPanel();
         footer.setLayout(new BoxLayout(footer, BoxLayout.Y_AXIS));
