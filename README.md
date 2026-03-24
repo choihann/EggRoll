@@ -2,6 +2,9 @@
 
 ---
 
+    Names: Hanna Choi and Gabriel Lu
+    Java Version: 25 
+
 # Mid-Project Review Report 3/23/2026
 
 **Design patterns:**
