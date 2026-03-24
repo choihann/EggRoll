@@ -3,19 +3,16 @@ package eggroll.pet;
 import java.util.List;
 import java.util.Random;
 
-public class DogFactory {
-    package eggroll.pet;
-
 import java.util.List;
 import java.util.Random;
 
-    public class CatFactory extends PetFactory{
+public class DogFactory {
         private final Random random = new Random();
         private static final List<String> COMMON_SPECIES = List.of("DOG");
         private static final List<String> RARE_SPECIES = List.of("DOG"); // replace with rare pets when added
         private static final List<String> EPIC_SPECIES = List.of("DOG"); // replace this as well
 
-        @Override
+        //@Override
         public Pet createPet(PetRarity rarity) {
             String petSpecies = pickSpecies(rarity);
             return makeDog(petSpecies, rarity);
@@ -38,7 +35,5 @@ import java.util.Random;
             };
 
         }
-
-    }
 
 }

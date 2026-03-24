@@ -52,7 +52,7 @@ abstract public class Pet implements IPet{
     protected int energy;
     protected int age;
 
-    protected boolean isEgg;
+    public boolean isEgg;
 
     private transient Random random = new Random(); // will have to encapsulate this, is used for random decreases
 

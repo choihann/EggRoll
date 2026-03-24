@@ -1,5 +1,6 @@
 package eggroll.pets;
 
+import eggroll.pet.Cat;
 import eggroll.pet.Pet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,12 +13,12 @@ public class PetTest {
 
     @BeforeEach
     void setUp() {
-        animalPet = new Pet("Animal Pet");
+        animalPet = new Cat();
     }
 
     @Test
     void testIsEgg() {
-        assertTrue(animalPet.isEgg());
+        assertTrue(animalPet.isEgg);
     }
 
     @Test
