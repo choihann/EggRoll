@@ -1,5 +1,5 @@
 package eggroll.pet;
 
 abstract public class PetFactory {
-    abstract Pet createPet();
+    public abstract Pet createPet(PetRarity rarity);
 }
