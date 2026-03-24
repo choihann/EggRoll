@@ -1,9 +1,13 @@
-package eggroll.pet;
+package eggroll.pet.petfactory;
+
+import eggroll.pet.Cat;
+import eggroll.pet.Pet;
+import eggroll.pet.PetRarity;
 
 import java.util.List;
 import java.util.Random;
 
-public class CatFactory extends PetFactory{
+public class CatFactory extends PetFactory {
     private final Random random = new Random();
     private static final List<String> COMMON_SPECIES = List.of("Cat");
     private static final List<String> RARE_SPECIES = List.of("Cat"); // replace with rare pets when added

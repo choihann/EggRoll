@@ -6,7 +6,7 @@ import eggroll.gacha.StandardGachaMachine;
 import eggroll.gamepersistence.DayManager;
 import eggroll.gamepersistence.GameState;
 import eggroll.gamepersistence.SaveManager;
-import eggroll.pet.CatFactory;
+import eggroll.pet.petfactory.CatFactory;
 import eggroll.pet.Pet;
 import eggroll.ui.CollectionPanel;
 import eggroll.ui.MainWindow;

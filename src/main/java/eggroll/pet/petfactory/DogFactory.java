@@ -1,7 +1,8 @@
-package eggroll.pet;
+package eggroll.pet.petfactory;
 
-import java.util.List;
-import java.util.Random;
+import eggroll.pet.Dog;
+import eggroll.pet.Pet;
+import eggroll.pet.PetRarity;
 
 import java.util.List;
 import java.util.Random;
