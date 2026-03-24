@@ -139,6 +139,24 @@ abstract public class Pet implements IPet{
     public void setCurrentState(PetState currentState) {
         this.currentState = currentState;
     }
+    public void setStat(int amount, String type){
+        switch (type.toLowerCase()) {
+            case "happiness":
+                this.happiness = amount;
+            case "fitness":
+                this.fitness = amount;
+            case "energy":
+                this.energy = amount;
+            case "age":
+                this.age = amount;
+            case "fullness":
+                this.fullness = amount;
+            case "hygiene":
+                this.hygiene = amount;
+            default:
+                return;
+        }
+    }
 
     abstract public boolean doActivity();
     // return a bool that indicates whether the activity was "successful" or not?

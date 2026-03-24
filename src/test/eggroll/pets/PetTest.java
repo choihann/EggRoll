@@ -12,13 +12,33 @@ public class PetTest {
     }
 
     @Test
-    void isEgg() {
+    void testIsEgg() {
         assertTrue(animalPet.isEgg());
     }
 
     @Test
-    void spawnsInUnbornState() {
+    void testSpawnsInUnbornState() {
         assertEquals(animalPet.unbornState, animalPet.getCurrentState);
+    }
+
+    @Test
+    void testIncreaseStatActuallyIncreasesStat(){
+        int initialHappiness = animalPet.getHappinessStat();
+        animalPet.increaseStat(1,"Happiness");
+        assertEquals(initialHappiness + 1, animalPet.getHappinessStat());
+    }
+
+    @Test
+    void testDecreaseStatActuallyDecreasesStat(){
+        int initialHappiness = animalPet.getHappinessStat();
+        animalPet.decreaseStat(1, "Happiness");
+        assertEquals(initialHappiness - 1, animalPet.getHappinessStat());
+    }
+
+    @Test
+    void testIsStatMax(){
+        animalPet.setStat(5, "happiness");
+        assertTrue(animalPet.isStatMax);
     }
 
 }
