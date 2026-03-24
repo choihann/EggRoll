@@ -16,6 +16,14 @@ public abstract class GachaMachine {
     private String description;
     private String title;
 
+    public int getCostOnePull() {
+        return COST_ONE_PULL;
+    }
+
+    public int getCostTenPull() {
+        return COST_TEN_PULL;
+    }
+
     protected GachaMachine(PetFactory petFactory, GameState gameState, String title, String description) {
         this.petFactory = petFactory;
         this.gameState = gameState;
