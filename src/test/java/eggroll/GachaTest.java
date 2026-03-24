@@ -2,9 +2,9 @@ package eggroll;
 
 import eggroll.gacha.StandardGachaMachine;
 import eggroll.gamepersistence.GameState;
-import eggroll.pet.CatFactory;
 import eggroll.pet.Pet;
 import eggroll.pet.PetRarity;
+import eggroll.pet.petfactory.CatFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

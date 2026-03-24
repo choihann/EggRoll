@@ -16,10 +16,10 @@ public class PetTest {
         animalPet = new Cat();
     }
 
-//    @Test
-//    void testIsEgg() {
-//        assertTrue(animalPet.isEgg());
-//    }
+    @Test
+    void testIsEgg() {
+        assertTrue(animalPet.isEgg);
+    }
 
     @Test
     void testSpawnsInUnbornState() {
