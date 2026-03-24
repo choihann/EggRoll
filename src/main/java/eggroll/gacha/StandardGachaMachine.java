@@ -1,8 +1,8 @@
 package eggroll.gacha;
 
 import eggroll.gamepersistence.GameState;
-import eggroll.pet.petfactory.PetFactory;
 import eggroll.pet.PetRarity;
+import eggroll.pet.petfactory.PetFactory;
 
 import java.util.Random;
 

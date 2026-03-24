@@ -331,19 +331,29 @@ abstract public class Pet implements IPet{
     }
 
     public void nap(){
-        currentState.nap(DEFAULT_MAX_STAT);
+        if (currentState != null) {
+            currentState.nap(DEFAULT_MAX_STAT);
+        }
     }
     public void eat(){
-        currentState.eat(DEFAULT_MAX_STAT);
+        if (currentState != null) {
+            currentState.eat(DEFAULT_MAX_STAT);
+        }
     }
     public void exercise(){
-        currentState.exercise(DEFAULT_MAX_STAT);
+        if (currentState != null) {
+            currentState.exercise(DEFAULT_MAX_STAT);
+        }
     }
     public void play(){
-        currentState.play(DEFAULT_MAX_STAT);
+        if (currentState != null) {
+            currentState.play(DEFAULT_MAX_STAT);
+        }
     }
     public void bathe(){
-        currentState.bathe(DEFAULT_MAX_STAT);
+        if (currentState != null) {
+            currentState.bathe(DEFAULT_MAX_STAT);
+        }
     }
     public void evolve(){
         currentState.evolve(DEFAULT_MAX_STAT);
