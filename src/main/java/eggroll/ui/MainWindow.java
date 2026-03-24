@@ -91,40 +91,8 @@ public class MainWindow extends JFrame {
 
     static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            // TODO: make sure to replace later since we're using placeholders here
             MainWindow window = new MainWindow();
-
-            window.navBarOverlay.refreshCoins(250);
-            window.navBarOverlay.refreshActivePet("Pip", "Happy");
-
-            window.petView.updatePetIdentity("Pip", "Fluffy one", "Baby", "Uncommon", "🐣");
-            window.petView.updateStats(72, 85, 60, 40);
-            window.petView.updateLevel(3, 40);
-            window.petView.updateStateLabel("Happy");
-            window.actionPanel.applyPetState("idle");
-
-            window.collectionPanel.refreshCollection(java.util.List.of(
-                    // placeholder pets for display purposes
-                    // TODO: Once we have implementation, replace this with actual pets
-                    new CollectionPanel.PetCardData("1", "Pip", "Fluffy one", "Baby", "Uncommon", "🐣", true),
-                    new CollectionPanel.PetCardData("2", "Glub", "Glub GLub", "Egg", "Rare", "🥚", false),
-                    new CollectionPanel.PetCardData("3", "Fire", "Ash", "Adult", "Epic", "🔥", false)
-            ));
-
-            window.inventoryPanel.refreshInventory(java.util.List.of(
-                    // I've put in emojis as like... a placeholder for any images we have this is just a rough idea
-                    // TODO: Replace with actual inventory items
-                    new InventoryPanel.ItemData("food_basic", "Basic Kibble", "🦴", "Restores 20 hunger.", 5),
-                    new InventoryPanel.ItemData("treat_star", "Star Treat", "⭐", "Boosts happiness by 15.", 2),
-                    new InventoryPanel.ItemData("tonic_rest", "Rest Tonic", "💤", "Instantly restores energy.", 1)
-            ));
-
-            // idk if we're gonna have a system like this, this is just a maybe for now
-            // TODO: determine how we want to do our gacha system
-            window.gachaPanel.updatePity(12, 50);
-            window.gachaPanel.applyAffordability(250);
-
-            window.setVisible(true);
+            new eggroll.game.GameController(window).startGame();
         });
     }
 }

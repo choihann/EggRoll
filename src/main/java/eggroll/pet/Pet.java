@@ -1,7 +1,6 @@
 package eggroll.pet;
 
 import eggroll.pet.petstate.PetState;
-import eggroll.pet.petstate.UnbornState;
 
 import java.util.Queue;
 import java.util.Random;
@@ -11,6 +10,22 @@ abstract public class Pet implements IPet{
     protected final static int DEFAULT_MAX_STAT = 5;
     protected final static int DEFAULT_MINIMUM_STAT = 2;
     protected final static int DEFAULT_STAT_INCREMENT = 1;
+
+    public static int getDefaultStartingStat() {
+        return DEFAULT_STARTING_STAT;
+    }
+
+    public static int getDefaultMaxStat() {
+        return DEFAULT_MAX_STAT;
+    }
+
+    public static int getDefaultMinimumStat() {
+        return DEFAULT_MINIMUM_STAT;
+    }
+
+    public static int getDefaultStatIncrement() {
+        return DEFAULT_STAT_INCREMENT;
+    }
 
     protected PetState unbornState;
     protected PetState normalState;
@@ -38,7 +53,7 @@ abstract public class Pet implements IPet{
 
     protected boolean isEgg;
 
-    private Random random = new Random(); // will have to encapsulate this, is used for random decreases
+    private transient Random random = new Random(); // will have to encapsulate this, is used for random decreases
 
     public Pet(String name, String species, PetRarity rarity, PetPersonality personality) {
         this.name = name;
