@@ -1,6 +1,7 @@
 package eggroll.pet.petstate;
 
 import eggroll.pet.Pet;
+import eggroll.pet.PetStatType;
 
 public class DirtyState implements PetState{
     private final static int DEFAULT_INCREMENT = 1;
@@ -31,7 +32,7 @@ public class DirtyState implements PetState{
 
     @Override
     public void bathe(int maximumHygiene) {
-        pet.increaseStat(DIRTY_HYGIENE_INCREMENT, "hygiene");
+        pet.increaseStat(DIRTY_HYGIENE_INCREMENT, PetStatType.HYGIENE);
         System.out.print(pet.getName() + "had a lovely bubble bath and now has hygiene " + pet.getHygieneStat());
     }
 

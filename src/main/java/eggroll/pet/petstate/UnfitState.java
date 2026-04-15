@@ -1,6 +1,7 @@
 package eggroll.pet.petstate;
 
 import eggroll.pet.Pet;
+import eggroll.pet.PetStatType;
 
 public class UnfitState implements PetState{
     private final static int DEFAULT_INCREMENT = 1;
@@ -20,7 +21,7 @@ public class UnfitState implements PetState{
 
     @Override
     public void exercise(int maximumFitness) {
-        pet.increaseStat(UNFIT_FITNESS_INCREMENT, "fitness");
+        pet.increaseStat(UNFIT_FITNESS_INCREMENT, PetStatType.FITNESS);
         System.out.print(pet.getName() + "had a healthy workout session! Fitness is now " + pet.getFullnessStat());
     }
 
@@ -30,8 +31,8 @@ public class UnfitState implements PetState{
             System.out.print(pet.getName() + " is at the height of joy already!");
             return;
         }
-        pet.increaseStat(DEFAULT_INCREMENT, "happiness");
-        pet.increaseStat(DEFAULT_INCREMENT, "fitness");
+        pet.increaseStat(DEFAULT_INCREMENT, PetStatType.HAPPINESS);
+        pet.increaseStat(DEFAULT_INCREMENT, PetStatType.FITNESS);
         System.out.print(pet.getName() + "played with great vigor. Its fitness is now" + pet.getFitnessStat() + " and happiness is now " + pet.getHappinessStat());
     }
 

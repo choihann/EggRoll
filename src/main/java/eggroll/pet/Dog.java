@@ -1,17 +1,19 @@
 package eggroll.pet;
 
+import eggroll.gacha.GachaRarity;
+
 public class Dog extends Pet{
     static protected String DEFAULT_DOG_NAME = "Archie";
     private final Integer UNIQUE_MAX_FULLNESS = 7;
 
-    public Dog(String name, String species, PetRarity rarity, PetPersonality personality) {
+    public Dog(String name, String species, GachaRarity rarity, PetPersonality personality) {
         super(name, species, rarity, personality);
     }
 
     public Dog(){
         this.name = DEFAULT_DOG_NAME;
         this.species = "Dog";
-        this.rarity = PetRarity.Common;
+        this.rarity = GachaRarity.Common;
         this.personality = PetPersonality.FOODIE;
 
         this.hygiene = DEFAULT_STARTING_STAT;
@@ -29,8 +31,8 @@ public class Dog extends Pet{
     @Override
     public boolean doActivity() {
         System.out.print(this.name + " chewed on some milk bones.");
-        increaseStat(DEFAULT_STAT_INCREMENT, "fullness"); // the dog's activity as a foodie is snacking.
-        increaseStat(DEFAULT_STAT_INCREMENT, "happiness");// and the dog's activity also makes it a little happier :)
+        increaseStat(DEFAULT_STAT_INCREMENT, PetStatType.HUNGER); // the dog's activity as a foodie is snacking.
+        increaseStat(DEFAULT_STAT_INCREMENT, PetStatType.HAPPINESS);// and the dog's activity also makes it a little happier :)
         return true;
     }
 

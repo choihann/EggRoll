@@ -1,6 +1,7 @@
 package eggroll.pet.petstate;
 
 import eggroll.pet.Pet;
+import eggroll.pet.PetStatType;
 
 public class TiredState implements PetState{
 
@@ -11,7 +12,7 @@ public class TiredState implements PetState{
 
     @Override
     public void nap(int maximumEnergy) {
-        pet.increaseStat(TIRED_ENERGY_INCREMENT, "energy");
+        pet.increaseStat(TIRED_ENERGY_INCREMENT, PetStatType.ENERGY);
         System.out.print("You tucked in " + pet.getName() + " for a well-deserved nap. Energy is now " + pet.getEnergyStat());
     }
 
@@ -39,8 +40,8 @@ public class TiredState implements PetState{
             System.out.print(pet.getName() + " is clean enough.");
             return;
         }
-        pet.increaseStat(DEFAULT_INCREMENT, "hygiene");
-        pet.increaseStat(DEFAULT_INCREMENT, "energy");
+        pet.increaseStat(DEFAULT_INCREMENT, PetStatType.HYGIENE);
+        pet.increaseStat(DEFAULT_INCREMENT, PetStatType.ENERGY);
         System.out.print(pet.getName() + "enjoyed a restful bath. Hygiene is now " + pet.getHygieneStat() + " and energy is now " + pet.getEnergyStat());
     }
 

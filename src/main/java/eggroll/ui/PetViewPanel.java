@@ -24,7 +24,7 @@ public class PetViewPanel extends JPanel implements PetObserver {
     private StatBar hungerBar;
     private StatBar happinessBar;
     private StatBar energyBar;
-    private StatBar xpBar;
+    private StatBar hygieneBar;
 
     private JLabel levelLabel;
 
@@ -121,15 +121,15 @@ public class PetViewPanel extends JPanel implements PetObserver {
         hungerBar = new StatBar("🍖 Hunger", Theme.ACCENT_TERRA);
         happinessBar = new StatBar("😊 Happy", Theme.ACCENT_AMBER);
         energyBar = new StatBar("⚡ Energy", Theme.ACCENT_PERIWINKLE);
-        xpBar = new StatBar("✨ XP", Theme.ACCENT_ROSE);
+        hygieneBar = new StatBar("✨ Hygiene", Theme.ACCENT_ROSE);
 
-        JPanel xpRow = new JPanel(new BorderLayout(Theme.PAD_SM, 0));
-        xpRow.setOpaque(false);
+        JPanel hygieneRow = new JPanel(new BorderLayout(Theme.PAD_SM, 0));
+        hygieneRow.setOpaque(false);
         levelLabel = new JLabel("Lv.1");
         levelLabel.setFont(Theme.FONT_CAPTION);
         levelLabel.setForeground(Theme.TEXT_MUTED);
-        xpRow.add(xpBar, BorderLayout.CENTER);
-        xpRow.add(levelLabel, BorderLayout.EAST);
+        hygieneRow.add(hygieneBar, BorderLayout.CENTER);
+        hygieneRow.add(levelLabel, BorderLayout.EAST);
 
         gridBagConstraints.gridy = 0;
         panel.add(UIComponents.sectionHeader("Stats"), gridBagConstraints);
@@ -140,7 +140,7 @@ public class PetViewPanel extends JPanel implements PetObserver {
         gridBagConstraints.gridy = 3;
         panel.add(energyBar, gridBagConstraints);
         gridBagConstraints.gridy = 4;
-        panel.add(xpRow, gridBagConstraints);
+        panel.add(hygieneRow, gridBagConstraints);
 
         return panel;
     }
@@ -155,18 +155,18 @@ public class PetViewPanel extends JPanel implements PetObserver {
         spriteEmoji.setText(emoji);
     }
 
-    public void updateStats(int hunger, int happiness, int energy, int xp) {
+    public void updateStats(int hunger, int happiness, int energy, int hygiene) {
         hungerBar.setValue(hunger);
         happinessBar.setValue(happiness);
         energyBar.setValue(energy);
-        xpBar.setValue(xp % 100);
+        hygieneBar.setValue(hygiene);
     }
 
     // TODO: Are we going to have levels or just evolve?
-    public void updateLevel(int level, int xp) {
-        levelLabel.setText("Lv." + level);
-        xpBar.setValue(xp % 100);
-    }
+//    public void updateLevel(int level, int xp) {
+//        levelLabel.setText("Lv." + level);
+//        hygieneBar.setValue(xp % 100);
+//    }
 
     public void updateStateLabel(String stateText) {
         stateLabel.setText(stateText);
@@ -176,12 +176,20 @@ public class PetViewPanel extends JPanel implements PetObserver {
     public void onPetEvent(PetEvent event, Pet pet) {
         SwingUtilities.invokeLater(() -> {
             switch (event) {
-                case HUNGER_CHANGED, HAPPINESS_CHANGED, ENERGY_CHANGED, FITNESS_CHANGED, HYGIENE_CHANGED ->
-                        updateStats(pet.getFullnessStat(), pet.getHappinessStat(), pet.getEnergyStat(), pet.getAge());
+                case HUNGER_CHANGED, HAPPINESS_CHANGED, ENERGY_CHANGED, FITNESS_CHANGED, HYGIENE_CHANGED -> updateStats(
+                        scaledToHundred(pet.getFullnessStat()),
+                        scaledToHundred(pet.getHappinessStat()),
+                        scaledToHundred(pet.getEnergyStat()),
+                        scaledToHundred(pet.getHygieneStat())
+                );
                 case STATE_CHANGED ->
                         updateStateLabel(pet.getPetState().getClass().getSimpleName().replace("State", ""));
-                case AGE_CHANGED -> updateLevel(pet.getAge(), 0); // TODO: swap 0 for real XP when you have it
+                // case AGE_CHANGED -> updateLevel(pet.getAge(), 0); // TODO: swap 0 for real XP when you have it
             }
         });
+    }
+
+    private int scaledToHundred(int raw) {
+        return (int) (raw * 100.0 / Pet.getDefaultMaxStat());
     }
 }

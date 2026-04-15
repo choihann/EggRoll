@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 import eggroll.pet.Cat;
 import eggroll.pet.Pet;
+import eggroll.potion.Potion;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -53,8 +54,13 @@ public class SaveManager {
                 .registerSubtype(Cat.class, "Cat");
         // .registerSubtype(Dog.class, "Dog") or whatever we decide on new stuff to be
 
+        RuntimeTypeAdapterFactory<Potion> potionAdapter =
+                RuntimeTypeAdapterFactory.of(Potion.class, "type")
+                        .registerSubtype(Potion.class, "Potion");
+
         return new GsonBuilder()
                 .registerTypeAdapterFactory(petAdapter)
+                .registerTypeAdapterFactory(potionAdapter)
                 .setPrettyPrinting()
                 .create();
     }

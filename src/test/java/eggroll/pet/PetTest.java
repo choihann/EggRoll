@@ -31,20 +31,20 @@ public class PetTest {
     @Test
     void testIncreaseStatActuallyIncreasesStat(){
         int initialHappiness = animalPet.getHappinessStat();
-        animalPet.increaseStat(1,"Happiness");
+        animalPet.increaseStat(1, PetStatType.HAPPINESS);
         assertEquals(initialHappiness + 1, animalPet.getHappinessStat());
     }
 
     @Test
     void testDecreaseStatActuallyDecreasesStat(){
         int initialHappiness = animalPet.getHappinessStat();
-        animalPet.decreaseStat(1, "Happiness");
+        animalPet.decreaseStat(1, PetStatType.HAPPINESS);
         assertEquals(initialHappiness - 1, animalPet.getHappinessStat());
     }
 
     @Test
     void testIsStatMax(){
-        animalPet.setStat(5, "happiness");
+        animalPet.setStat(5, PetStatType.HAPPINESS);
         assertTrue(animalPet.isStatMax());
     }
 
@@ -81,7 +81,7 @@ public class PetTest {
         assertEquals(false, animalPet.canEvolve());
 
         animalPet.setCurrentState(animalPet.getNormalState());
-        animalPet.setStat(5, "happiness");
+        animalPet.setStat(5, PetStatType.HAPPINESS);
         animalPet.setIsEgg(false);
 
         assertEquals(true, animalPet.canEvolve());

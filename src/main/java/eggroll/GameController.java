@@ -1,30 +1,38 @@
 package eggroll;
 
 import eggroll.command.*;
-import eggroll.gacha.GachaMachine;
-import eggroll.gacha.StandardGachaMachine;
+import eggroll.gacha.PetGachaMachine;
+import eggroll.gacha.PotionGachaMachine;
 import eggroll.gamepersistence.DayManager;
 import eggroll.gamepersistence.GameState;
 import eggroll.gamepersistence.SaveManager;
 import eggroll.pet.Pet;
 import eggroll.pet.petfactory.CatFactory;
+import eggroll.potion.Potion;
+import eggroll.potion.PotionFactory;
 import eggroll.ui.CollectionPanel;
+import eggroll.ui.InventoryPanel;
 import eggroll.ui.MainWindow;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class GameController {
     //  wiring game logic to UI
     private final MainWindow window;
     private final GameState state;
     private final DayManager dayManager;
-    private final GachaMachine gachaMachine;
+    private final PetGachaMachine petGacha;
+    private final PotionGachaMachine potionGacha;
 
     public GameController(MainWindow window) {
         this.window = window;
         this.state = SaveManager.load();
+        // TODO: New is bad?
         this.dayManager = new DayManager(state);
-        this.gachaMachine = new StandardGachaMachine(new CatFactory(), state);
+        this.petGacha = new PetGachaMachine(new CatFactory(), state);
+        this.potionGacha = new PotionGachaMachine(new PotionFactory(), state);
 
         wireActions();
         wireGacha();
@@ -53,16 +61,23 @@ public class GameController {
     }
 
     private void wireGacha() {
-        window.gachaPanel.setRollOneAction(event -> {
-            Pet gachaResult = gachaMachine.pullOne();
-            if (gachaResult == null) {
+        window.gachaPanel.setPetRollOneAction(event -> {
+            Pet pet = petGacha.pullOne();
+
+            if (pet == null) {
                 window.navBarOverlay.setNotification("Not enough coins!");
                 return;
             }
+
             SaveManager.save(state);
             window.navBarOverlay.setNotification("");
-            window.gachaPanel.showResult(
-                    "egg", gachaResult.getName(), gachaResult.getSpecies(), gachaResult.getRarity().name(), null
+
+            window.gachaPanel.showPetResult(
+                    "🥚",
+                    pet.getName(),
+                    pet.getSpecies(),
+                    pet.getRarity().name(),
+                    null
             );
 
             window.gachaPanel.applyCanAfford(state.currency);
@@ -70,26 +85,80 @@ public class GameController {
             refreshCollection();
         });
 
-        window.gachaPanel.setRollTenAction(event -> {
-            List<Pet> gachaResults = gachaMachine.pullTen();
-            if (gachaResults.isEmpty()) {
+        window.gachaPanel.setPetRollTenAction(event -> {
+            List<Pet> pets = petGacha.pullTen();
+
+            if (pets.isEmpty()) {
                 window.navBarOverlay.setNotification("Not enough coins!");
                 return;
             }
+
             SaveManager.save(state);
             window.navBarOverlay.setNotification("");
 
-            Pet lastResult = gachaResults.get(gachaResults.size() - 1);
-            window.gachaPanel.showResult(
-                    "egg",
-                    lastResult.getName(),
-                    lastResult.getSpecies(),
-                    lastResult.getRarity().name(),
-                    "+" + gachaResults.size() + " pets added to your collection!"
+            Pet last = pets.get(pets.size() - 1);
+
+            window.gachaPanel.showPetResult(
+                    "🥚",
+                    last.getName(),
+                    last.getSpecies(),
+                    last.getRarity().name(),
+                    "+" + pets.size() + " pets added to your collection!"
             );
+
             window.gachaPanel.applyCanAfford(state.currency);
             refreshOverlay();
             refreshCollection();
+        });
+
+        window.gachaPanel.setPotionRollOneAction(event -> {
+            Potion potion = potionGacha.pullOne();
+
+            if (potion == null) {
+                window.navBarOverlay.setNotification("Not enough coins!");
+                return;
+            }
+
+            SaveManager.save(state);
+            window.navBarOverlay.setNotification("");
+
+            window.gachaPanel.showPotionResult(
+                    potion.getPotionImage(),
+                    potion.getPotionName(),
+                    "Potion",
+                    potion.getRarity().name(),
+                    potion.getDescription()
+            );
+
+            window.gachaPanel.applyCanAfford(state.currency);
+            refreshOverlay();
+            refreshInventory();
+        });
+
+        window.gachaPanel.setPotionRollTenAction(event -> {
+            List<Potion> potions = potionGacha.pullTen();
+
+            if (potions.isEmpty()) {
+                window.navBarOverlay.setNotification("Not enough coins!");
+                return;
+            }
+
+            SaveManager.save(state);
+            window.navBarOverlay.setNotification("");
+
+            Potion last = potions.get(potions.size() - 1);
+
+            window.gachaPanel.showPotionResult(
+                    last.getPotionImage(),
+                    last.getPotionName(),
+                    "Potion",
+                    last.getRarity().name(),
+                    "+" + potions.size() + " potions added to your inventory!"
+            );
+
+            window.gachaPanel.applyCanAfford(state.currency);
+            refreshOverlay();
+            refreshInventory();
         });
     }
 
@@ -97,8 +166,8 @@ public class GameController {
         refreshOverlay();
         refreshPetView();
         refreshCollection();
+        refreshInventory();
         window.gachaPanel.applyCanAfford(state.currency);
-        window.gachaPanel.updatePity(0, 50); // TODO: wire real pity counter when added
     }
 
     private void refreshOverlay() {
@@ -127,7 +196,8 @@ public class GameController {
                 scaledPetStatusBar(pet.getEnergyStat()),
                 scaledPetStatusBar(pet.getHygieneStat())
         );
-        window.petView.updateLevel(pet.getAge(), 0);
+        // TODO: LEVEL?
+        // window.petView.updateLevel(pet.getAge(), 0);
         window.petView.updateStateLabel(currentMoodEmoji(pet));
     }
 
@@ -150,6 +220,53 @@ public class GameController {
             attachObservers(activePet());
             SaveManager.save(state);
             refreshAll();
+        });
+    }
+
+    private void refreshInventory() {
+        if (state.potionInventory == null) return;
+
+        Map<String, Long> potionQuantityById = state.potionInventory.stream()
+                .collect(Collectors.groupingBy(Potion::getId, Collectors.counting()));
+
+        List<InventoryPanel.ItemData> potions = state.potionInventory.stream()
+                .collect(Collectors.toMap(
+                        Potion::getId,
+                        representativePotion -> representativePotion,
+                        (keptPotion, ignoredPotion) -> keptPotion
+                ))
+                .values()
+                .stream()
+                .map(representativePotion -> new InventoryPanel.ItemData(
+                        representativePotion.getId(),
+                        representativePotion.getPotionName(),
+                        representativePotion.getPotionImage(),
+                        representativePotion.getDescription(),
+                        potionQuantityById.get(representativePotion.getId()).intValue()
+                ))
+                .toList();
+
+        window.inventoryPanel.refreshInventory(potions);
+
+        window.inventoryPanel.setUseListener(itemId -> {
+            Potion potion = state.potionInventory.stream()
+                    .filter(p -> p.getId().equals(itemId))
+                    .findFirst()
+                    .orElse(null);
+
+            if (potion == null) return;
+
+            Pet pet = activePet();
+            if (pet == null) return;
+
+            potion.drink(pet);
+
+            state.potionInventory.remove(potion);
+
+            SaveManager.save(state);
+
+            refreshInventory();
+            refreshPetView();
         });
     }
 
