@@ -19,7 +19,6 @@ public class Dog extends Pet{
         this.hygiene = DEFAULT_STARTING_STAT;
         this.happiness = DEFAULT_STARTING_STAT;
         this.fullness = DEFAULT_STARTING_STAT;
-        this.fitness = DEFAULT_STARTING_STAT;
         this.energy = DEFAULT_STARTING_STAT;
 
         this.currentState = unbornState;

@@ -1,7 +1,5 @@
 package eggroll.ui;
 
-import eggroll.GameController;
-
 import javax.swing.*;
 import java.awt.*;
 

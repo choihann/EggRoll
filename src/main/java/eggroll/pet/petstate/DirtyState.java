@@ -40,4 +40,9 @@ public class DirtyState implements PetState{
     public void evolve(int maximumHappiness) {
         System.out.print(pet.getName() + " is too dirty to evolve!");
     }
+
+    @Override
+    public void changeState(int minimumHygiene) {
+        if (pet.getHygieneStat() <= pet.getDefaultMaxStat());
+    }
 }
