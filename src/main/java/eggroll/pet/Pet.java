@@ -1,7 +1,11 @@
 package eggroll.pet;
 
+import eggroll.observer.PetEvent;
+import eggroll.observer.PetObserver;
 import eggroll.pet.petstate.PetState;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
@@ -11,6 +15,7 @@ abstract public class Pet implements IPet{
     protected final static int DEFAULT_MINIMUM_STAT = 2;
     protected final static int DEFAULT_STAT_INCREMENT = 1;
     protected final static int DEFAULT_EVOLUTION_AGE = 5;
+    private transient List<PetObserver> petObservers = new ArrayList<>();
 
     public static int getDefaultStartingStat() {
         return DEFAULT_STARTING_STAT;
@@ -151,9 +156,11 @@ abstract public class Pet implements IPet{
         return this.currentState;
     }
 
-    public void setCurrentState(PetState currentState) {
-        this.currentState = currentState;
+    public void setCurrentState(PetState newState) {
+        this.currentState = newState;
+        notifyObservers(PetEvent.STATE_CHANGED);
     }
+
     public void setStat(int amount, String type){
         switch (type.toLowerCase()) {
             case "happiness":
@@ -180,41 +187,62 @@ abstract public class Pet implements IPet{
 
     abstract public boolean applyPenalty(boolean needsPenalty);
 
+    // TODO: I just assumed MAX_STAT meant this is the cap, not sure if this is the interpretation we're going for
     public void increaseStat(int amount, String type) {
         switch (type.toLowerCase()) {
-            case "happiness":
-                this.happiness += amount;
-            case "fitness":
-                this.fitness += amount;
-            case "energy":
-                this.energy += amount;
-            case "age":
+            case "happiness" -> {
+                this.happiness = Math.min(DEFAULT_MAX_STAT, this.happiness + amount);
+                notifyObservers(PetEvent.HAPPINESS_CHANGED);
+            }
+            case "fitness" -> {
+                this.fitness = Math.min(DEFAULT_MAX_STAT, this.fitness + amount);
+                notifyObservers(PetEvent.FITNESS_CHANGED);
+            }
+            case "energy" -> {
+                this.energy = Math.min(DEFAULT_MAX_STAT, this.energy + amount);
+                notifyObservers(PetEvent.ENERGY_CHANGED);
+            }
+            case "fullness" -> {
+                this.fullness = Math.min(DEFAULT_MAX_STAT, this.fullness + amount);
+                notifyObservers(PetEvent.HUNGER_CHANGED);
+            }
+            case "hygiene" -> {
+                this.hygiene = Math.min(DEFAULT_MAX_STAT, this.hygiene + amount);
+                notifyObservers(PetEvent.HYGIENE_CHANGED);
+            }
+            // TODO: Figure out what we're going to do for age/evolution
+            case "age" -> {
                 this.age += amount;
-            case "fullness":
-                this.fullness += amount;
-            case "hygiene":
-                this.hygiene += amount;
-            default:
-                return;
+                notifyObservers(PetEvent.AGE_CHANGED);
+            }
         }
     }
 
     public void decreaseStat(int amount, String type) {
         switch (type.toLowerCase()) {
-            case "happiness":
-                this.happiness -= amount;
-            case "fitness":
-                this.fitness -= amount;
-            case "energy":
-                this.energy -= amount;
-            case "age":
-                this.age -= amount;
-            case "fullness":
-                this.fullness -= amount;
-            case "hygiene":
+            case "happiness" -> {
+                this.happiness = Math.max(0, this.happiness - amount);
+                notifyObservers(PetEvent.HAPPINESS_CHANGED);
+            }
+            case "fitness" -> {
+                this.fitness = Math.max(0, this.fitness - amount);
+                notifyObservers(PetEvent.FITNESS_CHANGED);
+            }
+            case "energy" -> {
+                this.energy = Math.max(0, this.energy - amount);
+                notifyObservers(PetEvent.ENERGY_CHANGED);
+            }
+            case "fullness" -> {
+                this.fullness = Math.max(0, this.fullness - amount);
+                notifyObservers(PetEvent.HUNGER_CHANGED);
+            }
+            case "hygiene" -> {
                 this.hygiene -= amount;
-            default:
-                return;
+                notifyObservers(PetEvent.HYGIENE_CHANGED);
+            }
+            // TODO: Is it possible to decrease age stat anyway?
+//            case "age":
+//                this.age -= amount;
         }
     }
 
@@ -399,5 +427,28 @@ abstract public class Pet implements IPet{
             return false;
         }
         return true;
+    }
+
+    public void addObserver(PetObserver observer) {
+        if (petObservers == null) {
+            petObservers = new ArrayList<>();
+        }
+        petObservers.add(observer);
+    }
+
+    public void removeObserver(PetObserver observer) {
+        if (petObservers != null) {
+            petObservers.remove(observer);
+        }
+    }
+
+    private void notifyObservers(PetEvent event) {
+        if (petObservers == null) {
+            return;
+        }
+
+        for (PetObserver observer : petObservers) {
+            observer.onPetEvent(event, this);
+        }
     }
 }

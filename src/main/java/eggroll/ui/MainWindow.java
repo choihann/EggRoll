@@ -1,5 +1,7 @@
 package eggroll.ui;
 
+import eggroll.GameController;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -92,7 +94,7 @@ public class MainWindow extends JFrame {
     static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             MainWindow window = new MainWindow();
-            new eggroll.game.GameController(window).startGame();
+            new GameController(window).startGame();
         });
     }
 }

@@ -1,5 +1,12 @@
 package eggroll.ui;
 
+import eggroll.observer.PetEvent;
+import eggroll.observer.PetObserver;
+import eggroll.pet.Pet;
+import eggroll.pet.petstate.HungryState;
+import eggroll.pet.petstate.PetState;
+import eggroll.pet.petstate.TiredState;
+import eggroll.pet.petstate.UnbornState;
 import eggroll.ui.UIComponents.buttonStyle;
 
 import javax.swing.*;
@@ -8,7 +15,7 @@ import java.awt.event.ActionListener;
 
 // I'm thinking buttons can be enabled or disabled based on the state pattern
 // TODO: each button should map to a command object like feeding, playing, resting, etc
-public class ActionPanel extends JPanel {
+public class ActionPanel extends JPanel implements PetObserver {
 
     private final buttonStyle feedBtn;
     private final buttonStyle playBtn;
@@ -90,24 +97,21 @@ public class ActionPanel extends JPanel {
     }
 
     // TODO: configure which buttons given pet state
-    // as of now, the default is just enabling everything
-    public void applyPetState(String state) {
+    public void applyPetState(PetState state) {
         setAllEnabled(true);
-
-        switch (state.toLowerCase()) {
-            case "sleeping" -> {
+        switch (state) {
+            case TiredState tiredState -> {
                 feedBtn.setEnabled(false);
                 playBtn.setEnabled(false);
-                batheBtn.setEnabled(false);
                 trainBtn.setEnabled(false);
                 showFeedback("Your pet is resting…");
             }
-            case "egg" -> {
+            case UnbornState unbornState -> {
                 setAllEnabled(false);
-                feedBtn.setEnabled(true);  // can incubate
-                showFeedback(" it will hatch soon!");
+                feedBtn.setEnabled(true);
+                showFeedback("It will hatch soon!");
             }
-            case "hungry" -> {
+            case HungryState hungrystate -> {
                 playBtn.setEnabled(false);
                 trainBtn.setEnabled(false);
                 showFeedback("Your pet is hungry!");
@@ -137,5 +141,14 @@ public class ActionPanel extends JPanel {
         batheBtn.setEnabled(enabled);
         healBtn.setEnabled(enabled);
         trainBtn.setEnabled(enabled);
+    }
+
+    @Override
+    public void onPetEvent(PetEvent event, Pet pet) {
+        if (event == PetEvent.STATE_CHANGED) {
+            SwingUtilities.invokeLater(() ->
+                    applyPetState(pet.getPetState())
+            );
+        }
     }
 }
