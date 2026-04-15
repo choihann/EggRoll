@@ -1,8 +1,8 @@
 package eggroll.pet.petfactory;
 
+import eggroll.gacha.GachaRarity;
 import eggroll.pet.Cat;
 import eggroll.pet.Pet;
-import eggroll.pet.PetRarity;
 
 import java.util.List;
 import java.util.Random;
@@ -14,13 +14,13 @@ public class CatFactory extends PetFactory {
     private static final List<String> EPIC_SPECIES = List.of("Cat"); // replace this as well
 
     @Override
-    public Pet createPet(PetRarity rarity) {
+    public Pet createPet(GachaRarity rarity) {
         String petSpecies = pickSpecies(rarity);
         return makeCat(petSpecies, rarity);
     }
 
     // helpers
-    private String pickSpecies(PetRarity rarity) {
+    private String pickSpecies(GachaRarity rarity) {
         List<String> speciesPool = switch (rarity) {
             case Rare -> RARE_SPECIES;
             case Epic -> EPIC_SPECIES;
@@ -29,7 +29,7 @@ public class CatFactory extends PetFactory {
         return speciesPool.get(random.nextInt(speciesPool.size()));
     }
 
-    private Pet makeCat(String species, PetRarity rarity) {
+    private Pet makeCat(String species, GachaRarity rarity) {
         return switch (species.toLowerCase()) {
             case "cat" -> new Cat();
             default -> new Cat(); // populate this once we have more species of cat

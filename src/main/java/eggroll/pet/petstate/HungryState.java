@@ -1,6 +1,7 @@
 package eggroll.pet.petstate;
 
 import eggroll.pet.Pet;
+import eggroll.pet.PetStatType;
 
 public class HungryState implements PetState{
     private final static int DEFAULT_INCREMENT = 1;
@@ -16,7 +17,7 @@ public class HungryState implements PetState{
 
     @Override
     public void eat(int maximumFullness) {
-        pet.increaseStat(HUNGRY_FULLNESS_INCREMENT, "fullness");
+        pet.increaseStat(HUNGRY_FULLNESS_INCREMENT, PetStatType.HUNGER);
         System.out.print(pet.getName() + "had a feast fit for kings. Fullness is now " + pet.getFullnessStat());
     }
 

@@ -1,6 +1,7 @@
 package eggroll.pet.petstate;
 
 import eggroll.pet.Pet;
+import eggroll.pet.PetStatType;
 
 public class NormalState implements PetState{
     private final static int DEFAULT_INCREMENT = 1;
@@ -13,7 +14,7 @@ public class NormalState implements PetState{
             System.out.print(pet.getName() + " is not tired enough to sleep.");
             return;
         }
-        pet.increaseStat(DEFAULT_INCREMENT, "energy");
+        pet.increaseStat(DEFAULT_INCREMENT, PetStatType.ENERGY);
         System.out.print("You tucked in " + pet.getName() + " for a little nap. Energy is now " + pet.getEnergyStat());
     }
 
@@ -23,7 +24,7 @@ public class NormalState implements PetState{
             System.out.print(pet.getName() + " can't manage another single, solitary bite!");
             return;
         }
-        pet.increaseStat(DEFAULT_INCREMENT, "fullness");
+        pet.increaseStat(DEFAULT_INCREMENT, PetStatType.HUNGER);
         System.out.print("You fed " + pet.getName() + ". Fullness is now " + pet.getFullnessStat());
     }
 
@@ -33,7 +34,7 @@ public class NormalState implements PetState{
             System.out.print(pet.getName() + " is tired of the gym.");
             return;
         }
-        pet.increaseStat(DEFAULT_INCREMENT, "fitness");
+        pet.increaseStat(DEFAULT_INCREMENT, PetStatType.FITNESS);
         System.out.print(pet.getName() + " got to movin'! Fitness is now " + pet.getFitnessStat());
     }
 
@@ -43,7 +44,7 @@ public class NormalState implements PetState{
             System.out.print(pet.getName() + " is at the height of joy, no more playtime.");
             return;
         }
-        pet.increaseStat(DEFAULT_INCREMENT, "happiness");
+        pet.increaseStat(DEFAULT_INCREMENT, PetStatType.HAPPINESS);
         System.out.print("You spent quality time with " + pet.getName() + ". Happiness is now " + pet.getEnergyStat());
     }
 
@@ -53,7 +54,7 @@ public class NormalState implements PetState{
             System.out.print(pet.getName() + " is clean enough.");
             return;
         }
-        pet.increaseStat(DEFAULT_INCREMENT, "hygiene");
+        pet.increaseStat(DEFAULT_INCREMENT, PetStatType.HYGIENE);
         System.out.print("WASH MY BELLAY! said " + pet.getName() + ". Its hygiene is now " + pet.getHygieneStat());
     }
 

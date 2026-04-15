@@ -1,17 +1,19 @@
 package eggroll.pet;
 
+import eggroll.gacha.GachaRarity;
+
 public class Cat extends Pet{
     static protected String DEFAULT_CAT_NAME = "Mittens";
     private final Integer UNIQUE_MAX_ENERGY = 7;
 
-    public Cat(String name, String species, PetRarity rarity, PetPersonality personality) {
+    public Cat(String name, String species, GachaRarity rarity, PetPersonality personality) {
         super(name, species, rarity, personality);
     }
 
     public Cat(){
         this.name = DEFAULT_CAT_NAME;
         this.species = "Cat";
-        this.rarity = PetRarity.Common;
+        this.rarity = GachaRarity.Common;
         this.personality = PetPersonality.LAZY;
 
         this.hygiene = DEFAULT_STARTING_STAT;
@@ -29,8 +31,8 @@ public class Cat extends Pet{
     @Override
     public boolean doActivity() {
         System.out.print(this.name + " decided to take a nap in its free time. Oh so sleepy!");
-        increaseStat(DEFAULT_STAT_INCREMENT, "energy"); // the cat's activity as a LAZY animal is napping
-        increaseStat(DEFAULT_STAT_INCREMENT, "happiness");// and the cat's activity also makes it a little happier :)
+        increaseStat(DEFAULT_STAT_INCREMENT, PetStatType.ENERGY); // the cat's activity as a LAZY animal is napping
+        increaseStat(DEFAULT_STAT_INCREMENT, PetStatType.HAPPINESS);// and the cat's activity also makes it a little happier :)
         return true;
     }
 

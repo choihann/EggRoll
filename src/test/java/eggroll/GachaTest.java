@@ -1,9 +1,9 @@
 package eggroll;
 
-import eggroll.gacha.StandardGachaMachine;
+import eggroll.gacha.GachaRarity;
+import eggroll.gacha.PetGachaMachine;
 import eggroll.gamepersistence.GameState;
 import eggroll.pet.Pet;
-import eggroll.pet.PetRarity;
 import eggroll.pet.petfactory.CatFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,12 +12,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class GachaTest {
     private GameState gameState;
-    private StandardGachaMachine gachaMachine;
+    private PetGachaMachine gachaMachine;
 
     @BeforeEach
     void setUp() { // TODO: Change CatFactory to other factories
         gameState = GameState.newGame();
-        gachaMachine = new StandardGachaMachine(new CatFactory(), gameState);
+        gachaMachine = new PetGachaMachine(new CatFactory(), gameState);
     }
 
     @Test
@@ -61,9 +61,9 @@ public class GachaTest {
     @Test
     void onlyValidRarityReturned() {
         for (int i = 0; i < 1000; i++) {
-            PetRarity rarity = gachaMachine.determinePetRarity();
+            GachaRarity rarity = gachaMachine.determineGachaRarity();
             assertNotNull(rarity);
-            assertTrue(rarity == PetRarity.Common || rarity == PetRarity.Rare || rarity == PetRarity.Epic);
+            assertTrue(rarity == GachaRarity.Common || rarity == GachaRarity.Rare || rarity == GachaRarity.Epic);
         }
     }
 }

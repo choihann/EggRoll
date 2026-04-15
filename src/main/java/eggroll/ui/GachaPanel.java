@@ -12,15 +12,24 @@ public class GachaPanel extends JPanel {
     private static final int ROLL_ONE_COST = 100;
     private static final int ROLL_TEN_COST = 950;
 
-    private buttonStyle rollOneBtn;
-    private buttonStyle rollTenBtn;
-    private JLabel resultEmoji;
-    private JLabel resultName;
-    private JLabel resultSpecies;
-    private JLabel resultRarity;
-    private JLabel resultFlavorText;
+    private buttonStyle rollOnePetBtn;
+    private buttonStyle rollTenPetBtn;
+    private buttonStyle rollOnePotionBtn;
+    private buttonStyle rollTenPotionBtn;
+    private JLabel petEmoji;
+    private JLabel petName;
+    private JLabel petSpecies;
+    private JLabel petFlavorText;
+    private JLabel petRarity;
     private JLabel pityLabel;
-    private JPanel resultCard;
+    private JPanel petResultCard;
+
+    private JLabel potionEmoji;
+    private JLabel potionFlavorText;
+    private JLabel potionName;
+    private JLabel potionEffect;
+    private JLabel potionRarity;
+    private JPanel potionResultCard;
 
     public GachaPanel() {
         setLayout(new BorderLayout(0, Theme.PAD_LG));
@@ -40,47 +49,93 @@ public class GachaPanel extends JPanel {
         header.add(UIComponents.divider());
         add(header, BorderLayout.NORTH);
 
-        rollOneBtn = rollBtn("Roll x1", ROLL_ONE_COST, Theme.ACCENT_SAGE);
-        rollTenBtn = rollBtn("Roll x10", ROLL_TEN_COST, Theme.ACCENT_AMBER);
+        rollOnePetBtn = rollBtn("Roll Pet x1", ROLL_ONE_COST, Theme.ACCENT_SAGE);
+        rollTenPetBtn = rollBtn("Roll Pet x10", ROLL_TEN_COST, Theme.ACCENT_AMBER);
 
-        JPanel btnRow = new JPanel(new GridLayout(1, 2, Theme.PAD_LG, 0));
-        btnRow.setOpaque(false);
-        btnRow.setMaximumSize(new Dimension(Short.MAX_VALUE, 80));
-        btnRow.add(rollOneBtn);
-        btnRow.add(rollTenBtn);
+        JPanel petRow = new JPanel(new GridLayout(1, 2, Theme.PAD_LG, 0));
+        petRow.setOpaque(false);
+        petRow.setMaximumSize(new Dimension(Short.MAX_VALUE, 80));
+        petRow.add(rollOnePetBtn);
+        petRow.add(rollTenPetBtn);
+
+        rollOnePotionBtn = rollBtn("Roll Potion x1", ROLL_ONE_COST, Theme.ACCENT_SAGE);
+        rollTenPotionBtn = rollBtn("Roll Potion x10", ROLL_TEN_COST, Theme.ACCENT_AMBER);
+
+        JPanel potionRow = new JPanel(new GridLayout(1, 2, Theme.PAD_LG, 0));
+        potionRow.setOpaque(false);
+        potionRow.setMaximumSize(new Dimension(Short.MAX_VALUE, 80));
+        potionRow.add(rollOnePotionBtn);
+        potionRow.add(rollTenPotionBtn);
+
 
         // this is meant to be the result card
         // TODO: test this once we have implementation for the gacha system
-        resultEmoji = centred("", new Font("Serif", Font.PLAIN, 72), Theme.TEXT_PRIMARY);
-        resultName = centred("???", Theme.FONT_PET_NAME, Theme.TEXT_PRIMARY);
-        resultSpecies = centred("", Theme.FONT_BODY, Theme.TEXT_SECONDARY);
-        resultRarity = UIComponents.rarityLabel("Common");
-        resultRarity.setAlignmentX(CENTER_ALIGNMENT);
-        resultFlavorText = centred("", new Font("Serif", Font.ITALIC, 13), Theme.TEXT_MUTED);
+        petEmoji = centred("", new Font("Serif", Font.PLAIN, 72), Theme.TEXT_PRIMARY);
+        petName = centred("???", Theme.FONT_PET_NAME, Theme.TEXT_PRIMARY);
+        petSpecies = centred("", Theme.FONT_BODY, Theme.TEXT_SECONDARY);
+        petRarity = UIComponents.rarityLabel("Common");
+        petRarity.setAlignmentX(CENTER_ALIGNMENT);
+        petFlavorText = centred("", new Font("Serif", Font.ITALIC, 13), Theme.TEXT_MUTED);
 
-        resultCard = new RoundedPanel(Theme.BG_CARD);
-        resultCard.setLayout(new BoxLayout(resultCard, BoxLayout.Y_AXIS));
-        resultCard.setBorder(BorderFactory.createEmptyBorder(Theme.PAD_LG, Theme.PAD_XL, Theme.PAD_LG, Theme.PAD_XL));
-        resultCard.setAlignmentX(CENTER_ALIGNMENT);
-        resultCard.add(centred("You received!", Theme.FONT_HEADING, Theme.TEXT_PRIMARY));
-        resultCard.add(Box.createVerticalStrut(Theme.PAD_SM));
-        resultCard.add(resultEmoji);
-        resultCard.add(Box.createVerticalStrut(Theme.PAD_SM));
-        resultCard.add(resultName);
-        resultCard.add(Box.createVerticalStrut(4));
-        resultCard.add(resultSpecies);
-        resultCard.add(Box.createVerticalStrut(4));
-        resultCard.add(resultRarity);
-        resultCard.add(Box.createVerticalStrut(Theme.PAD_SM));
-        resultCard.add(resultFlavorText);
-        resultCard.setVisible(false);
+        petResultCard = new RoundedPanel(Theme.BG_CARD);
+        petResultCard.setLayout(new BoxLayout(petResultCard, BoxLayout.Y_AXIS));
+        petResultCard.setBorder(BorderFactory.createEmptyBorder(
+                Theme.PAD_LG, Theme.PAD_XL, Theme.PAD_LG, Theme.PAD_XL
+        ));
+        petResultCard.setAlignmentX(CENTER_ALIGNMENT);
+
+        petResultCard.add(centred("You hatched a pet!", Theme.FONT_HEADING, Theme.TEXT_PRIMARY));
+        petResultCard.add(Box.createVerticalStrut(Theme.PAD_SM));
+        petResultCard.add(petEmoji);
+        petResultCard.add(Box.createVerticalStrut(Theme.PAD_SM));
+        petResultCard.add(petName);
+        petResultCard.add(Box.createVerticalStrut(4));
+        petResultCard.add(petSpecies);
+        petResultCard.add(Box.createVerticalStrut(4));
+        petResultCard.add(petRarity);
+        petResultCard.add(Box.createVerticalStrut(4));
+        petResultCard.add(petFlavorText);
+
+        petResultCard.setVisible(false);
+
+        // potion
+        potionEmoji = centred("", new Font("Serif", Font.PLAIN, 72), Theme.TEXT_PRIMARY);
+        potionName = centred("???", Theme.FONT_PET_NAME, Theme.TEXT_PRIMARY);
+        potionEffect = centred("", Theme.FONT_BODY, Theme.TEXT_SECONDARY);
+        potionRarity = UIComponents.rarityLabel("Common");
+        potionRarity.setAlignmentX(CENTER_ALIGNMENT);
+        potionFlavorText = centred("", new Font("Serif", Font.ITALIC, 13), Theme.TEXT_MUTED);
+
+        potionResultCard = new RoundedPanel(Theme.BG_CARD);
+        potionResultCard.setLayout(new BoxLayout(potionResultCard, BoxLayout.Y_AXIS));
+        potionResultCard.setBorder(BorderFactory.createEmptyBorder(
+                Theme.PAD_LG, Theme.PAD_XL, Theme.PAD_LG, Theme.PAD_XL
+        ));
+        potionResultCard.setAlignmentX(CENTER_ALIGNMENT);
+
+        potionResultCard.add(centred("You found a potion!", Theme.FONT_HEADING, Theme.TEXT_PRIMARY));
+        potionResultCard.add(Box.createVerticalStrut(Theme.PAD_SM));
+        potionResultCard.add(potionEmoji);
+        potionResultCard.add(Box.createVerticalStrut(Theme.PAD_SM));
+        potionResultCard.add(potionName);
+        potionResultCard.add(Box.createVerticalStrut(4));
+        potionResultCard.add(potionEffect);
+        potionResultCard.add(Box.createVerticalStrut(4));
+        potionResultCard.add(potionRarity);
+        potionResultCard.add(Box.createVerticalStrut(4));
+        potionResultCard.add(potionFlavorText);
+
+        potionResultCard.setVisible(false);
 
         JPanel body = new JPanel();
         body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
         body.setOpaque(false);
-        body.add(btnRow);
+        body.add(petRow);
         body.add(Box.createVerticalStrut(Theme.PAD_LG));
-        body.add(resultCard);
+        body.add(potionRow);
+        body.add(Box.createVerticalStrut(Theme.PAD_LG));
+        body.add(petResultCard);
+        body.add(potionResultCard);
         add(body, BorderLayout.CENTER);
 
         // TODO: replace with actual details
@@ -101,23 +156,51 @@ public class GachaPanel extends JPanel {
     }
 
 
-    public void setRollOneAction(ActionListener l) {
-        rollOneBtn.addActionListener(l);
+    public void setPetRollOneAction(ActionListener actionListener) {
+        rollOnePetBtn.addActionListener(actionListener);
     }
 
-    public void setRollTenAction(ActionListener l) {
-        rollTenBtn.addActionListener(l);
+    public void setPetRollTenAction(ActionListener actionListener) {
+        rollTenPetBtn.addActionListener(actionListener);
+    }
+
+    public void setPotionRollOneAction(ActionListener actionListener) {
+        rollOnePotionBtn.addActionListener(actionListener);
+    }
+
+    public void setPotionRollTenAction(ActionListener actionListener) {
+        rollTenPotionBtn.addActionListener(actionListener);
     }
 
 
-    public void showResult(String emoji, String name, String species, String rarity, String flavourText) {
-        resultEmoji.setText(emoji);
-        resultName.setText(name);
-        resultSpecies.setText(species);
-        resultRarity.setText("- " + rarity);
-        resultRarity.setForeground(Theme.rarityColour(rarity));
-        resultFlavorText.setText(flavourText != null ? "\"" + flavourText + "\"" : "");
-        resultCard.setVisible(true);
+    public void showPetResult(String emoji, String name, String species, String rarity, String flavorText) {
+        petEmoji.setText(emoji);
+        petName.setText(name);
+        petSpecies.setText(species);
+        petRarity.setText("- " + rarity);
+        petRarity.setForeground(Theme.rarityColour(rarity));
+
+        petFlavorText.setText(flavorText != null ? "\"" + flavorText + "\"" : "");
+
+        petResultCard.setVisible(true);
+        potionResultCard.setVisible(false);
+
+        revalidate();
+        repaint();
+    }
+
+    public void showPotionResult(String emoji, String name, String effect, String rarity, String flavorText) {
+        potionEmoji.setText(emoji);
+        potionName.setText(name);
+        potionEffect.setText(effect != null ? "\"" + effect + "\"" : "");
+        potionRarity.setText("- " + rarity);
+        potionRarity.setForeground(Theme.rarityColour(rarity));
+        potionFlavorText.setText(flavorText != null ? "\"" + flavorText + "\"" : "");
+
+
+        potionResultCard.setVisible(true);
+        petResultCard.setVisible(false);
+
         revalidate();
         repaint();
     }
@@ -128,8 +211,10 @@ public class GachaPanel extends JPanel {
     }
 
     public void applyCanAfford(int coins) {
-        rollOneBtn.setEnabled(coins >= ROLL_ONE_COST);
-        rollTenBtn.setEnabled(coins >= ROLL_TEN_COST);
+        rollOnePetBtn.setEnabled(coins >= ROLL_ONE_COST);
+        rollTenPetBtn.setEnabled(coins >= ROLL_TEN_COST);
+        rollOnePotionBtn.setEnabled(coins >= ROLL_ONE_COST);
+        rollTenPotionBtn.setEnabled(coins >= ROLL_TEN_COST);
     }
 
     // the helpers

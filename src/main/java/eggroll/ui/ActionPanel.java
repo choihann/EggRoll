@@ -21,8 +21,6 @@ public class ActionPanel extends JPanel implements PetObserver {
     private final buttonStyle playBtn;
     private final buttonStyle restBtn;
     private final buttonStyle batheBtn;
-    private final buttonStyle healBtn;
-    private final buttonStyle trainBtn;
 
     // this is for our theoretical feedback
     private final JLabel feedbackLabel;
@@ -49,17 +47,6 @@ public class ActionPanel extends JPanel implements PetObserver {
         primaryGrid.add(restBtn);
         primaryGrid.add(batheBtn);
 
-        // TODO: merge into one grid instead of two
-        // I left it at two cause I don't know how many actions we want yet
-        JPanel secondaryRow = new JPanel(new GridLayout(1, 2, Theme.PAD_MD, 0));
-        secondaryRow.setOpaque(false);
-
-        healBtn = buildActionButton("💊  Heal", Theme.ACCENT_AMBER, "Use a medicine item to heal your pet.");
-
-        trainBtn = buildActionButton("📚  Train", Theme.ACCENT_SAGE_DARK, "Train your pet to gain bonus XP.");
-
-        secondaryRow.add(healBtn);
-        secondaryRow.add(trainBtn);
 
         // this is for feedback stuffs
         feedbackLabel = new JLabel(" ", SwingConstants.CENTER);
@@ -72,7 +59,6 @@ public class ActionPanel extends JPanel implements PetObserver {
         body.setOpaque(false);
         body.add(primaryGrid);
         body.add(Box.createVerticalStrut(Theme.PAD_SM));
-        body.add(secondaryRow);
         body.add(Box.createVerticalStrut(Theme.PAD_SM));
         body.add(feedbackLabel);
 
@@ -103,7 +89,6 @@ public class ActionPanel extends JPanel implements PetObserver {
             case TiredState tiredState -> {
                 feedBtn.setEnabled(false);
                 playBtn.setEnabled(false);
-                trainBtn.setEnabled(false);
                 showFeedback("Your pet is resting…");
             }
             case UnbornState unbornState -> {
@@ -113,7 +98,6 @@ public class ActionPanel extends JPanel implements PetObserver {
             }
             case HungryState hungrystate -> {
                 playBtn.setEnabled(false);
-                trainBtn.setEnabled(false);
                 showFeedback("Your pet is hungry!");
             }
             default -> showFeedback("");
@@ -139,8 +123,7 @@ public class ActionPanel extends JPanel implements PetObserver {
         playBtn.setEnabled(enabled);
         restBtn.setEnabled(enabled);
         batheBtn.setEnabled(enabled);
-        healBtn.setEnabled(enabled);
-        trainBtn.setEnabled(enabled);
+
     }
 
     @Override

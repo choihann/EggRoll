@@ -1,14 +1,11 @@
 package eggroll.pet;
 
+import eggroll.gacha.GachaRarity;
 import eggroll.observer.PetEvent;
 import eggroll.observer.PetObserver;
 import eggroll.pet.petstate.PetState;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Random;
+import java.util.*;
 
 abstract public class Pet implements IPet{
     protected final static int DEFAULT_STARTING_STAT = 3;
@@ -48,7 +45,7 @@ abstract public class Pet implements IPet{
 
     protected String name;
     protected String species;
-    protected PetRarity rarity;
+    protected GachaRarity rarity;
     protected PetPersonality personality;
     protected boolean needsPenalty;
     protected int hygiene;
@@ -62,7 +59,7 @@ abstract public class Pet implements IPet{
 
     private transient Random random = new Random(); // will have to encapsulate this, is used for random decreases
 
-    public Pet(String name, String species, PetRarity rarity, PetPersonality personality) {
+    public Pet(String name, String species, GachaRarity rarity, PetPersonality personality) {
         this.name = name;
         this.species = species;
         this.rarity = rarity;
@@ -82,7 +79,8 @@ abstract public class Pet implements IPet{
 
     protected Pet() {
     }
-    public Pet(String name, PetRarity rarity) {
+
+    public Pet(String name, GachaRarity rarity) {
         this.name = name;
         this.species = "NULL";
         this.rarity = rarity;
@@ -112,7 +110,8 @@ abstract public class Pet implements IPet{
     public PetState getPetState(){
         return this.currentState;
     }
-    public PetRarity getRarity(){
+
+    public GachaRarity getRarity() {
         return this.rarity;
     }
     public boolean needsPenalty(){
@@ -168,22 +167,13 @@ abstract public class Pet implements IPet{
         notifyObservers(PetEvent.STATE_CHANGED);
     }
 
-    public void setStat(int amount, String type){
-        switch (type.toLowerCase()) {
-            case "happiness":
-                this.happiness = amount;
-            case "fitness":
-                this.fitness = amount;
-            case "energy":
-                this.energy = amount;
-            case "age":
-                this.age = amount;
-            case "fullness":
-                this.fullness = amount;
-            case "hygiene":
-                this.hygiene = amount;
-            default:
-                return;
+    public void setStat(int amount, PetStatType type) {
+        switch (type) {
+            case HAPPINESS -> this.happiness = amount;
+            case FITNESS -> this.fitness = amount;
+            case ENERGY -> this.energy = amount;
+            case HUNGER -> this.fullness = amount;
+            case HYGIENE -> this.hygiene = amount;
         }
     }
 
@@ -200,61 +190,53 @@ abstract public class Pet implements IPet{
     abstract public boolean applyPenalty(boolean needsPenalty);
 
     // TODO: I just assumed MAX_STAT meant this is the cap, not sure if this is the interpretation we're going for
-    public void increaseStat(int amount, String type) {
-        switch (type.toLowerCase()) {
-            case "happiness" -> {
+    public void increaseStat(int amount, PetStatType type) {
+        switch (type) {
+            case HAPPINESS -> {
                 this.happiness = Math.min(DEFAULT_MAX_STAT, this.happiness + amount);
                 notifyObservers(PetEvent.HAPPINESS_CHANGED);
             }
-            case "fitness" -> {
+            case FITNESS -> {
                 this.fitness = Math.min(DEFAULT_MAX_STAT, this.fitness + amount);
                 notifyObservers(PetEvent.FITNESS_CHANGED);
             }
-            case "energy" -> {
+            case ENERGY -> {
                 this.energy = Math.min(DEFAULT_MAX_STAT, this.energy + amount);
                 notifyObservers(PetEvent.ENERGY_CHANGED);
             }
-            case "fullness" -> {
+            case HUNGER -> {
                 this.fullness = Math.min(DEFAULT_MAX_STAT, this.fullness + amount);
                 notifyObservers(PetEvent.HUNGER_CHANGED);
             }
-            case "hygiene" -> {
+            case HYGIENE -> {
                 this.hygiene = Math.min(DEFAULT_MAX_STAT, this.hygiene + amount);
                 notifyObservers(PetEvent.HYGIENE_CHANGED);
-            }
-            // TODO: Figure out what we're going to do for age/evolution
-            case "age" -> {
-                this.age += amount;
-                notifyObservers(PetEvent.AGE_CHANGED);
             }
         }
     }
 
-    public void decreaseStat(int amount, String type) {
-        switch (type.toLowerCase()) {
-            case "happiness" -> {
+    public void decreaseStat(int amount, PetStatType type) {
+        switch (type) {
+            case HAPPINESS -> {
                 this.happiness = Math.max(0, this.happiness - amount);
                 notifyObservers(PetEvent.HAPPINESS_CHANGED);
             }
-            case "fitness" -> {
+            case FITNESS -> {
                 this.fitness = Math.max(0, this.fitness - amount);
                 notifyObservers(PetEvent.FITNESS_CHANGED);
             }
-            case "energy" -> {
+            case ENERGY -> {
                 this.energy = Math.max(0, this.energy - amount);
                 notifyObservers(PetEvent.ENERGY_CHANGED);
             }
-            case "fullness" -> {
+            case HUNGER -> {
                 this.fullness = Math.max(0, this.fullness - amount);
                 notifyObservers(PetEvent.HUNGER_CHANGED);
             }
-            case "hygiene" -> {
-                this.hygiene -= amount;
+            case HYGIENE -> {
+                this.hygiene = Math.max(0, this.hygiene - amount);
                 notifyObservers(PetEvent.HYGIENE_CHANGED);
             }
-            // TODO: Is it possible to decrease age stat anyway?
-//            case "age":
-//                this.age -= amount;
         }
     }
 

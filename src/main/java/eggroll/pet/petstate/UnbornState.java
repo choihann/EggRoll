@@ -1,6 +1,7 @@
 package eggroll.pet.petstate;
 
 import eggroll.pet.Pet;
+import eggroll.pet.PetStatType;
 
 public class UnbornState implements PetState{
     // All pets have the same behavior in Unborn state
@@ -35,7 +36,7 @@ public class UnbornState implements PetState{
             System.out.print(pet.getName() + " would rather crack open its shell...!");
             return;
         }
-        pet.increaseStat(DEFAULT_INCREMENT, "happiness");
+        pet.increaseStat(DEFAULT_INCREMENT, PetStatType.HAPPINESS);
         System.out.print("You rolled around " + pet.getName() + ". Happiness is now " + pet.getHappinessStat());
     }
 
