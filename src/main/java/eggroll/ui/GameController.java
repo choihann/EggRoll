@@ -1,4 +1,4 @@
-package eggroll;
+package eggroll.ui;
 
 import eggroll.command.*;
 import eggroll.gacha.PetGachaMachine;
@@ -10,9 +10,6 @@ import eggroll.pet.Pet;
 import eggroll.pet.petfactory.CatFactory;
 import eggroll.potion.Potion;
 import eggroll.potion.PotionFactory;
-import eggroll.ui.CollectionPanel;
-import eggroll.ui.InventoryPanel;
-import eggroll.ui.MainWindow;
 
 import java.util.List;
 import java.util.Map;

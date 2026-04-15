@@ -50,7 +50,6 @@ public class PetTest {
 
     @Test
     void testQueueingStatesActuallyQueuesStatesToThePet(){
-        animalPet.pushToQueuedStates(animalPet.getUnfitState());
         animalPet.pushToQueuedStates(animalPet.getDirtyState());
         animalPet.pushToQueuedStates(animalPet.getTiredState());
         animalPet.pushToQueuedStates(animalPet.getSadState());
@@ -62,7 +61,6 @@ public class PetTest {
         expectedStates.add(animalPet.getDirtyState());
         expectedStates.add(animalPet.getTiredState());
         expectedStates.add(animalPet.getSadState());
-        expectedStates.add(animalPet.getUnfitState());
         expectedStates.add(animalPet.getNormalState());
 
         assertTrue(animalPet.getQueuedStates().containsAll(expectedStates));

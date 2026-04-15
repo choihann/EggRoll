@@ -36,7 +36,6 @@ abstract public class Pet implements IPet{
     protected PetState dirtyState;
     protected PetState tiredState;
     protected PetState sadState;
-    protected PetState unfitState;
     protected PetState hungryState;
 
     protected PetState currentState;
@@ -51,7 +50,6 @@ abstract public class Pet implements IPet{
     protected int hygiene;
     protected int happiness;
     protected int fullness;
-    protected int fitness;
     protected int energy;
     protected int age;
 
@@ -68,7 +66,6 @@ abstract public class Pet implements IPet{
         this.hygiene = DEFAULT_STARTING_STAT;
         this.happiness = DEFAULT_STARTING_STAT;
         this.fullness = DEFAULT_STARTING_STAT;
-        this.fitness = DEFAULT_STARTING_STAT;
         this.energy = DEFAULT_STARTING_STAT;
 
         this.currentState = unbornState;
@@ -89,7 +86,6 @@ abstract public class Pet implements IPet{
         this.hygiene = DEFAULT_STARTING_STAT;
         this.happiness = DEFAULT_STARTING_STAT;
         this.fullness = DEFAULT_STARTING_STAT;
-        this.fitness = DEFAULT_STARTING_STAT;
         this.energy = DEFAULT_STARTING_STAT;
 
         this.currentState = unbornState;
@@ -126,9 +122,6 @@ abstract public class Pet implements IPet{
     }
     public int getFullnessStat(){
         return this.fullness;
-    }
-    public int getFitnessStat(){
-        return this.fitness;
     }
     public int getEnergyStat(){
         return this.energy;
@@ -170,7 +163,6 @@ abstract public class Pet implements IPet{
     public void setStat(int amount, PetStatType type) {
         switch (type) {
             case HAPPINESS -> this.happiness = amount;
-            case FITNESS -> this.fitness = amount;
             case ENERGY -> this.energy = amount;
             case HUNGER -> this.fullness = amount;
             case HYGIENE -> this.hygiene = amount;
@@ -189,16 +181,11 @@ abstract public class Pet implements IPet{
 
     abstract public boolean applyPenalty(boolean needsPenalty);
 
-    // TODO: I just assumed MAX_STAT meant this is the cap, not sure if this is the interpretation we're going for
     public void increaseStat(int amount, PetStatType type) {
         switch (type) {
             case HAPPINESS -> {
                 this.happiness = Math.min(DEFAULT_MAX_STAT, this.happiness + amount);
                 notifyObservers(PetEvent.HAPPINESS_CHANGED);
-            }
-            case FITNESS -> {
-                this.fitness = Math.min(DEFAULT_MAX_STAT, this.fitness + amount);
-                notifyObservers(PetEvent.FITNESS_CHANGED);
             }
             case ENERGY -> {
                 this.energy = Math.min(DEFAULT_MAX_STAT, this.energy + amount);
@@ -221,10 +208,6 @@ abstract public class Pet implements IPet{
                 this.happiness = Math.max(0, this.happiness - amount);
                 notifyObservers(PetEvent.HAPPINESS_CHANGED);
             }
-            case FITNESS -> {
-                this.fitness = Math.max(0, this.fitness - amount);
-                notifyObservers(PetEvent.FITNESS_CHANGED);
-            }
             case ENERGY -> {
                 this.energy = Math.max(0, this.energy - amount);
                 notifyObservers(PetEvent.ENERGY_CHANGED);
@@ -244,7 +227,6 @@ abstract public class Pet implements IPet{
         if (hygiene == DEFAULT_MAX_STAT &&
                 happiness == DEFAULT_MAX_STAT &&
                 fullness == DEFAULT_MAX_STAT &&
-                fitness == DEFAULT_MAX_STAT &&
                 energy == DEFAULT_MAX_STAT) {
             return;
         }
@@ -275,13 +257,6 @@ abstract public class Pet implements IPet{
                     break;
 
                 case 3:
-                    if (fitness < DEFAULT_MAX_STAT) {
-                        fitness = Math.min(DEFAULT_MAX_STAT, fitness + amount);
-                        return;
-                    }
-                    break;
-
-                case 4:
                     if (energy < DEFAULT_MAX_STAT) {
                         energy = Math.min(DEFAULT_MAX_STAT, energy + amount);
                         return;
@@ -299,7 +274,7 @@ abstract public class Pet implements IPet{
     }
 
     public void lowerRandomStat(int amount) {
-        if (hygiene == 0 && happiness == 0 && fullness == 0 && fitness == 0 && energy == 0) {
+        if (hygiene == 0 && happiness == 0 && fullness == 0 && energy == 0) {
             return;
         }
 
@@ -326,12 +301,6 @@ abstract public class Pet implements IPet{
                     }
                     break;
                 case 3:
-                    if (fitness > 0) {
-                        fitness = Math.max(0, fitness - amount);
-                        return;
-                    }
-                    break;
-                case 4:
                     if (energy > 0) {
                         energy = Math.max(0, energy - amount);
                         return;
@@ -398,9 +367,6 @@ abstract public class Pet implements IPet{
         if(energy <= DEFAULT_MINIMUM_STAT){
             this.queuedStates.add(tiredState);
         }
-        if(fitness <= DEFAULT_MINIMUM_STAT){
-            this.queuedStates.add(unfitState);
-        }
         if(happiness <= DEFAULT_MINIMUM_STAT){
             this.queuedStates.add(sadState);
         }
@@ -408,7 +374,6 @@ abstract public class Pet implements IPet{
             hygiene > DEFAULT_MINIMUM_STAT &&
             energy > DEFAULT_MINIMUM_STAT &&
             fullness > DEFAULT_MINIMUM_STAT &&
-            fitness > DEFAULT_MINIMUM_STAT &&
             happiness > DEFAULT_MINIMUM_STAT){
                 this.queuedStates.add(normalState);
         }
