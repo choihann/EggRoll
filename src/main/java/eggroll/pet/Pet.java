@@ -6,6 +6,7 @@ import eggroll.pet.petstate.PetState;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
 
@@ -43,7 +44,7 @@ abstract public class Pet implements IPet{
 
     protected PetState currentState;
 
-    protected Queue<PetState> queuedStates;
+    protected Queue<PetState> queuedStates = new LinkedList<>();
 
     protected String name;
     protected String species;
@@ -105,6 +106,9 @@ abstract public class Pet implements IPet{
     public String getSpecies(){
         return this.species;
     }
+    public Queue<PetState> getQueuedStates(){
+        return queuedStates;
+    }
     public PetState getPetState(){
         return this.currentState;
     }
@@ -155,6 +159,9 @@ abstract public class Pet implements IPet{
     public PetState getCurrentState(){
         return this.currentState;
     }
+    public PetState getHungryState(){
+        return this.hungryState;
+    }
 
     public void setCurrentState(PetState newState) {
         this.currentState = newState;
@@ -178,6 +185,11 @@ abstract public class Pet implements IPet{
             default:
                 return;
         }
+    }
+
+    public void setIsEgg(boolean newEggStatus) {
+        //mostly for testing
+        this.isEgg = newEggStatus;
     }
 
     abstract public boolean doActivity();
@@ -348,7 +360,10 @@ abstract public class Pet implements IPet{
     }
 
     public boolean canEvolve() {
-        if(this.currentState == normalState && this.age >= DEFAULT_EVOLUTION_AGE){
+        if(this.currentState == unbornState && this.happiness == DEFAULT_MAX_STAT){
+            return true; // hatching is a little different than evolving
+        }
+        if(this.currentState == normalState && this.age >= DEFAULT_EVOLUTION_AGE && this.happiness == DEFAULT_MAX_STAT){
             return true;
         }
         return false;
@@ -417,7 +432,7 @@ abstract public class Pet implements IPet{
         }
     }
 
-    public PetState popOffQueuedStates(){
+    public PetState popOffQueuedState(){
         PetState newPetState = queuedStates.poll();
         return newPetState;
     }
