@@ -1,12 +1,15 @@
 package eggroll.ui;
 
+import eggroll.observer.PetEvent;
+import eggroll.observer.PetObserver;
+import eggroll.pet.Pet;
 import eggroll.ui.UIComponents.RoundedPanel;
 import eggroll.ui.UIComponents.StatBar;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class PetViewPanel extends JPanel {
+public class PetViewPanel extends JPanel implements PetObserver {
 
     private JLabel petNameLabel;
     private JLabel speciesLabel;
@@ -159,6 +162,7 @@ public class PetViewPanel extends JPanel {
         xpBar.setValue(xp % 100);
     }
 
+    // TODO: Are we going to have levels or just evolve?
     public void updateLevel(int level, int xp) {
         levelLabel.setText("Lv." + level);
         xpBar.setValue(xp % 100);
@@ -168,4 +172,16 @@ public class PetViewPanel extends JPanel {
         stateLabel.setText(stateText);
     }
 
+    @Override
+    public void onPetEvent(PetEvent event, Pet pet) {
+        SwingUtilities.invokeLater(() -> {
+            switch (event) {
+                case HUNGER_CHANGED, HAPPINESS_CHANGED, ENERGY_CHANGED, FITNESS_CHANGED, HYGIENE_CHANGED ->
+                        updateStats(pet.getFullnessStat(), pet.getHappinessStat(), pet.getEnergyStat(), pet.getAge());
+                case STATE_CHANGED ->
+                        updateStateLabel(pet.getPetState().getClass().getSimpleName().replace("State", ""));
+                case AGE_CHANGED -> updateLevel(pet.getAge(), 0); // TODO: swap 0 for real XP when you have it
+            }
+        });
+    }
 }

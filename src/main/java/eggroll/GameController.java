@@ -1,4 +1,4 @@
-package eggroll.game;
+package eggroll;
 
 import eggroll.command.*;
 import eggroll.gacha.GachaMachine;
@@ -29,6 +29,9 @@ public class GameController {
         wireActions();
         wireGacha();
         refreshAll();
+        if (activePet() != null) {
+            attachObservers(activePet());
+        }
     }
 
     public void startGame() {
@@ -46,7 +49,6 @@ public class GameController {
     private void runCommand(Command command) {
         if (activePet() == null) return;
         dayManager.executeAction(command, activePet());
-        refreshPetView();
         refreshOverlay();
     }
 
@@ -145,6 +147,7 @@ public class GameController {
 
         window.collectionPanel.setSelectListener(petName -> {
             state.activePetName = petName;
+            attachObservers(activePet());
             SaveManager.save(state);
             refreshAll();
         });
@@ -161,12 +164,18 @@ public class GameController {
         return (int) ((raw / (float) Pet.getDefaultMaxStat()) * 100);
     }
 
+    // TODO: replace later
     private String currentMoodEmoji(Pet pet) {
         if (pet.getHappinessStat() >= Pet.getDefaultMaxStat()) return "😊 Happy";
         if (pet.getEnergyStat() <= Pet.getDefaultMinimumStat()) return "😴 Tired";
         if (pet.getFullnessStat() <= Pet.getDefaultMinimumStat()) return "🍖 Hungry";
         if (pet.getHygieneStat() <= Pet.getDefaultMinimumStat()) return "🛁 Dirty";
         return "😊 Content";
+    }
+
+    private void attachObservers(Pet pet) {
+        pet.addObserver(window.petView);
+        pet.addObserver(window.actionPanel);
     }
 
 }
