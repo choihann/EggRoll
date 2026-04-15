@@ -39,11 +39,11 @@ public abstract class GachaMachine {
         return gameState.currency >= getCostTenPull();
     }
 
-    protected void chargeOne() {
+    protected void chargeOnePull() {
         gameState.currency -= getCostOnePull();
     }
 
-    protected void chargeTen() {
+    protected void chargeTenPull() {
         gameState.currency -= getCostTenPull();
     }
 

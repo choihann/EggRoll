@@ -16,6 +16,7 @@ public class PotionGachaMachine extends GachaMachine {
         this.potionFactory = potionFactory;
     }
 
+    // TODO: Magic number alert, discuss rates
     @Override
     public GachaRarity determineGachaRarity() {
         int roll = random.nextInt(100);
@@ -27,7 +28,7 @@ public class PotionGachaMachine extends GachaMachine {
     public Potion pullOne() {
         if (!canAffordOnePull()) return null;
 
-        chargeOne();
+        chargeOnePull();
 
         GachaRarity rarity = determineGachaRarity();
         Potion potion = potionFactory.createPotion(rarity);
@@ -39,7 +40,7 @@ public class PotionGachaMachine extends GachaMachine {
     public List<Potion> pullTen() {
         if (!canAffordTenPull()) return List.of();
 
-        chargeTen();
+        chargeTenPull();
 
         List<Potion> results = new ArrayList<>();
 

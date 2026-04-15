@@ -16,6 +16,7 @@ public class PetGachaMachine extends GachaMachine {
         this.petFactory = petFactory;
     }
 
+    // TODO: Magic number alert, we should probably talk about gacha rates
     @Override
     public GachaRarity determineGachaRarity() {
         int roll = random.nextInt(100);
@@ -27,7 +28,7 @@ public class PetGachaMachine extends GachaMachine {
     public Pet pullOne() {
         if (!canAffordOnePull()) return null;
 
-        chargeOne();
+        chargeOnePull();
 
         GachaRarity rarity = determineGachaRarity();
         Pet pet = petFactory.createPet(rarity);
@@ -39,7 +40,7 @@ public class PetGachaMachine extends GachaMachine {
     public List<Pet> pullTen() {
         if (!canAffordTenPull()) return List.of();
 
-        chargeTen();
+        chargeTenPull();
 
         List<Pet> results = new ArrayList<>();
 
