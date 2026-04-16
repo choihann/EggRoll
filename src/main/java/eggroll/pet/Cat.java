@@ -6,15 +6,14 @@ public class Cat extends Pet{
     static protected String DEFAULT_CAT_NAME = "Mittens";
     private final Integer UNIQUE_MAX_ENERGY = 7;
 
-    public Cat(String name, String species, GachaRarity rarity, PetPersonality personality) {
-        super(name, species, rarity, personality);
+    public Cat(String name, String species, GachaRarity rarity) {
+        super(name, species, rarity);
     }
 
     public Cat(){
         this.name = DEFAULT_CAT_NAME;
         this.species = "Cat";
         this.rarity = GachaRarity.Common;
-        this.personality = PetPersonality.LAZY;
 
         this.hygiene = DEFAULT_STARTING_STAT;
         this.happiness = DEFAULT_STARTING_STAT;

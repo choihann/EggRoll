@@ -17,13 +17,8 @@ public class HungryState implements PetState{
 
     @Override
     public void eat(int maximumFullness) {
-        pet.increaseStat(HUNGRY_FULLNESS_INCREMENT, PetStatType.HUNGER);
+        pet.increaseStat(HUNGRY_FULLNESS_INCREMENT, PetStatType.FULLNESS);
         System.out.print(pet.getName() + "had a feast fit for kings. Fullness is now " + pet.getFullnessStat());
-    }
-
-    @Override
-    public void exercise(int maximumFitness) {
-        System.out.print(pet.getName() + " is too hungry to get swole!");
     }
 
     @Override
@@ -34,10 +29,5 @@ public class HungryState implements PetState{
     @Override
     public void bathe(int maximumHygiene) {
         System.out.print(pet.getName() + " is too hungry to take a bath!");
-    }
-
-    @Override
-    public void evolve(int maximumHappiness) {
-        System.out.print(pet.getName() + " is too hungry to evolve!");
     }
 }

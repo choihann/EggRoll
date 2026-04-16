@@ -4,7 +4,6 @@ public interface IPet {
     public boolean doActivity();
     public void nap();
     public void eat();
-    public void exercise();
     public void bathe();
     public void evolve();
     public void growOlder();

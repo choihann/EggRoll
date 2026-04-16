@@ -25,19 +25,10 @@ public class SadState implements PetState{
             System.out.print(pet.getName() + " can't manage another single, solitary bite!");
             return;
         }
-        pet.increaseStat(DEFAULT_INCREMENT, PetStatType.HUNGER);
+        pet.increaseStat(DEFAULT_INCREMENT, PetStatType.FULLNESS);
         System.out.print("You fed " + pet.getName() + ". Fullness is now " + pet.getFullnessStat());
     }
 
-    @Override
-    public void exercise(int maximumFitness) {
-        if(pet.getFitnessStat() >= maximumFitness){
-            System.out.print(pet.getName() + " is tired of the gym.");
-            return;
-        }
-        pet.increaseStat(DEFAULT_INCREMENT, PetStatType.FITNESS);
-        System.out.print(pet.getName() + " got to movin'! Fitness is now " + pet.getFitnessStat());
-    }
 
     @Override
     public void play(int maximumHappiness) {
@@ -57,11 +48,5 @@ public class SadState implements PetState{
         }
         pet.increaseStat(DEFAULT_INCREMENT, PetStatType.ENERGY);
         System.out.print("WASH MY BELLAY! said " + pet.getName() + ". Its hygiene is now " + pet.getHygieneStat());
-    }
-
-    @Override
-    public void evolve(int maximumHappiness) {
-        System.out.print("Your pet is too sad to evolve!");
-        return;
     }
 }
