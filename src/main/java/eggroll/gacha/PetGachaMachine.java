@@ -1,6 +1,6 @@
 package eggroll.gacha;
 
-import eggroll.gamepersistence.GameState;
+import eggroll.gamepersistence.EggRoll;
 import eggroll.pet.Pet;
 import eggroll.pet.petfactory.PetFactory;
 
@@ -11,7 +11,7 @@ public class PetGachaMachine extends GachaMachine {
 
     private final PetFactory petFactory;
 
-    public PetGachaMachine(PetFactory petFactory, GameState state) {
+    public PetGachaMachine(PetFactory petFactory, EggRoll state) {
         super(state, "Egg Gacha", "Hatch mystery pets!");
         this.petFactory = petFactory;
     }

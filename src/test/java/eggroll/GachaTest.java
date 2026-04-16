@@ -2,7 +2,7 @@ package eggroll;
 
 import eggroll.gacha.GachaRarity;
 import eggroll.gacha.PetGachaMachine;
-import eggroll.gamepersistence.GameState;
+import eggroll.gamepersistence.EggRoll;
 import eggroll.pet.Pet;
 import eggroll.pet.petfactory.CatFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,12 +11,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GachaTest {
-    private GameState gameState;
+    private EggRoll gameState;
     private PetGachaMachine gachaMachine;
 
     @BeforeEach
     void setUp() { // TODO: Change CatFactory to other factories
-        gameState = GameState.newGame();
+        gameState = EggRoll.newGame();
         gachaMachine = new PetGachaMachine(new CatFactory(), gameState);
     }
 

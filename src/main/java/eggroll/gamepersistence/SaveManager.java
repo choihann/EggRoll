@@ -18,7 +18,7 @@ public class SaveManager {
 
     private static final Gson GSON = buildGson();
 
-    public static void save(GameState state) {
+    public static void save(EggRoll state) {
         try {
             Files.createDirectories(SAVE_PATH.getParent());
             Files.writeString(SAVE_PATH, GSON.toJson(state));
@@ -27,17 +27,17 @@ public class SaveManager {
         }
     }
 
-    public static GameState load() {
+    public static EggRoll load() {
         if (!Files.exists(SAVE_PATH)) {
             System.out.println("[SaveManager] No save found — starting a new game.");
-            return GameState.newGame();
+            return EggRoll.newGame();
         }
         try {
             String json = Files.readString(SAVE_PATH);
-            return GSON.fromJson(json, GameState.class);
+            return GSON.fromJson(json, EggRoll.class);
         } catch (IOException ioException) {
             System.err.println("[SaveManager] Failed to load: " + ioException.getMessage());
-            return GameState.newGame();
+            return EggRoll.newGame();
         }
     }
 

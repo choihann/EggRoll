@@ -21,9 +21,7 @@ public class GachaPanel extends JPanel {
     private JLabel petSpecies;
     private JLabel petFlavorText;
     private JLabel petRarity;
-    private JLabel pityLabel;
     private JPanel petResultCard;
-
     private JLabel potionEmoji;
     private JLabel potionFlavorText;
     private JLabel potionName;
@@ -138,9 +136,6 @@ public class GachaPanel extends JPanel {
         body.add(potionResultCard);
         add(body, BorderLayout.CENTER);
 
-        // TODO: replace with actual details
-        pityLabel = centred("Pity: 0 / 50 pulls until guaranteed Rare+", Theme.FONT_CAPTION, Theme.TEXT_MUTED);
-
         // TODO: Replace with actual rates
         JLabel ratesLabel = centred("<html><center>Rates: Common 50% - Rare 35% - Epic 15% </center></html>", Theme.FONT_CAPTION, Theme.TEXT_MUTED);
 
@@ -148,8 +143,6 @@ public class GachaPanel extends JPanel {
         footer.setLayout(new BoxLayout(footer, BoxLayout.Y_AXIS));
         footer.setOpaque(false);
         footer.add(UIComponents.divider());
-        footer.add(Box.createVerticalStrut(Theme.PAD_SM));
-        footer.add(pityLabel);
         footer.add(Box.createVerticalStrut(Theme.PAD_SM));
         footer.add(ratesLabel);
         add(footer, BorderLayout.SOUTH);
@@ -203,11 +196,6 @@ public class GachaPanel extends JPanel {
 
         revalidate();
         repaint();
-    }
-
-    // TODO: are we doing pity?
-    public void updatePity(int current, int cap) {
-        pityLabel.setText("Pity: " + current + " / " + cap + " pulls until guaranteed Rare+");
     }
 
     public void applyCanAfford(int coins) {
