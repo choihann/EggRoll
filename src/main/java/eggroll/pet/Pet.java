@@ -344,7 +344,7 @@ abstract public class Pet implements IPet{
     }
 
     public void evolve(){
-        if(currentEvolutionStrategy.canEvolve(this)){
+        if(canEvolve()){
             changeStrategy();
         }
     };
