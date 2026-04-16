@@ -3,8 +3,7 @@ package eggroll.ui;
 import eggroll.command.*;
 import eggroll.gacha.PetGachaMachine;
 import eggroll.gacha.PotionGachaMachine;
-import eggroll.gamepersistence.DayManager;
-import eggroll.gamepersistence.GameState;
+import eggroll.gamepersistence.EggRoll;
 import eggroll.gamepersistence.SaveManager;
 import eggroll.pet.Pet;
 import eggroll.pet.petfactory.CatFactory;
@@ -18,8 +17,7 @@ import java.util.stream.Collectors;
 public class GameController {
     //  wiring game logic to UI
     private final MainWindow window;
-    private final GameState state;
-    private final DayManager dayManager;
+    private final EggRoll state;
     private final PetGachaMachine petGacha;
     private final PotionGachaMachine potionGacha;
 
@@ -27,7 +25,6 @@ public class GameController {
         this.window = window;
         this.state = SaveManager.load();
         // TODO: New is bad?
-        this.dayManager = new DayManager(state);
         this.petGacha = new PetGachaMachine(new CatFactory(), state);
         this.potionGacha = new PotionGachaMachine(new PotionFactory(), state);
 
@@ -53,7 +50,7 @@ public class GameController {
 
     private void runCommand(Command command) {
         if (activePet() == null) return;
-        dayManager.executeAction(command, activePet());
+        state.executeAction(command, activePet());
         refreshOverlay();
     }
 

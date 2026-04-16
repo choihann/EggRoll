@@ -3,7 +3,7 @@ package eggroll.pet.petstate;
 import eggroll.pet.Pet;
 import eggroll.pet.PetStatType;
 
-public class DirtyState implements PetState{
+public class DirtyState implements PetState {
     private final static int DEFAULT_INCREMENT = 1;
     private final static int DIRTY_HYGIENE_INCREMENT = 2;
 
@@ -12,7 +12,6 @@ public class DirtyState implements PetState{
     @Override
     public void nap(int maximumEnergy) {
         System.out.print(pet.getName() + " doesn't want to ruin its bed with dirt.");
-        return;
     }
 
     @Override

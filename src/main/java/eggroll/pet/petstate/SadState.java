@@ -3,7 +3,7 @@ package eggroll.pet.petstate;
 import eggroll.pet.Pet;
 import eggroll.pet.PetStatType;
 
-public class SadState implements PetState{
+public class SadState implements PetState {
 
     private final static int DEFAULT_INCREMENT = 1;
 
@@ -48,5 +48,10 @@ public class SadState implements PetState{
         }
         pet.increaseStat(DEFAULT_INCREMENT, PetStatType.ENERGY);
         System.out.print("WASH MY BELLAY! said " + pet.getName() + ". Its hygiene is now " + pet.getHygieneStat());
+    }
+
+    @Override
+    public void changeState(int minimumStat) {
+        // TODO
     }
 }

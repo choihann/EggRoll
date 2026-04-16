@@ -1,6 +1,6 @@
 package eggroll.gacha;
 
-import eggroll.gamepersistence.GameState;
+import eggroll.gamepersistence.EggRoll;
 import eggroll.potion.Potion;
 import eggroll.potion.PotionFactory;
 
@@ -11,7 +11,7 @@ public class PotionGachaMachine extends GachaMachine {
 
     private final PotionFactory potionFactory;
 
-    public PotionGachaMachine(PotionFactory potionFactory, GameState state) {
+    public PotionGachaMachine(PotionFactory potionFactory, EggRoll state) {
         super(state, "Potion Gacha", "Get some potions!");
         this.potionFactory = potionFactory;
     }

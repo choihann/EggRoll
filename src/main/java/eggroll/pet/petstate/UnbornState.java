@@ -16,12 +16,10 @@ public class UnbornState implements PetState{
 
     @Override
     public void nap(int maximumEnergy) {
-        return;
     }
 
     @Override
     public void eat(int maximumFullness) {
-        return;
     }
 
     @Override
@@ -36,6 +34,10 @@ public class UnbornState implements PetState{
 
     @Override
     public void bathe(int maximumHygiene) {
-        return;
+    }
+
+    @Override
+    public void changeState(int minimumStat) {
+        // TODO
     }
 }

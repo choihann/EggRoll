@@ -1,6 +1,6 @@
 package eggroll.gacha;
 
-import eggroll.gamepersistence.GameState;
+import eggroll.gamepersistence.EggRoll;
 
 import java.util.Random;
 
@@ -9,13 +9,13 @@ public abstract class GachaMachine {
     private static final int COST_ONE_PULL = 100;
     private static final int COST_TEN_PULL = 950;
 
-    protected final GameState gameState;
+    protected final EggRoll gameState;
     protected final Random random = new Random();
 
     private final String title;
     private final String description;
 
-    protected GachaMachine(GameState gameState, String title, String description) {
+    protected GachaMachine(EggRoll gameState, String title, String description) {
         this.gameState = gameState;
         this.title = title;
         this.description = description;
