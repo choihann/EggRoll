@@ -24,18 +24,8 @@ public class NormalState implements PetState{
             System.out.print(pet.getName() + " can't manage another single, solitary bite!");
             return;
         }
-        pet.increaseStat(DEFAULT_INCREMENT, PetStatType.HUNGER);
+        pet.increaseStat(DEFAULT_INCREMENT, PetStatType.FULLNESS);
         System.out.print("You fed " + pet.getName() + ". Fullness is now " + pet.getFullnessStat());
-    }
-
-    @Override
-    public void exercise(int maximumFitness) {
-        if(pet.getFitnessStat() >= maximumFitness){
-            System.out.print(pet.getName() + " is tired of the gym.");
-            return;
-        }
-        pet.increaseStat(DEFAULT_INCREMENT, PetStatType.FITNESS);
-        System.out.print(pet.getName() + " got to movin'! Fitness is now " + pet.getFitnessStat());
     }
 
     @Override
@@ -59,7 +49,8 @@ public class NormalState implements PetState{
     }
 
     @Override
-    public void evolve(int maximumHappiness) {
+    public void changeState(int minimumStat) {
 
     }
+
 }
