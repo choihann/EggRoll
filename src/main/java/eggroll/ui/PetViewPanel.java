@@ -124,15 +124,9 @@ public class PetViewPanel extends JPanel implements PetObserver {
         hygieneBar = new StatBar("✨ Hygiene", Theme.ACCENT_ROSE);
 
         JPanel hygieneRow = new JPanel(new BorderLayout(Theme.PAD_SM, 0));
-        hygieneRow.setOpaque(false);
-        levelLabel = new JLabel("Lv.1");
-        levelLabel.setFont(Theme.FONT_CAPTION);
-        levelLabel.setForeground(Theme.TEXT_MUTED);
-        hygieneRow.add(hygieneBar, BorderLayout.CENTER);
-        hygieneRow.add(levelLabel, BorderLayout.EAST);
 
         gridBagConstraints.gridy = 0;
-        panel.add(UIComponents.sectionHeader("Stats"), gridBagConstraints);
+        panel.add(hygieneBar, gridBagConstraints);
         gridBagConstraints.gridy = 1;
         panel.add(hungerBar, gridBagConstraints);
         gridBagConstraints.gridy = 2;
@@ -162,12 +156,6 @@ public class PetViewPanel extends JPanel implements PetObserver {
         hygieneBar.setValue(hygiene);
     }
 
-    // TODO: Are we going to have levels or just evolve?
-//    public void updateLevel(int level, int xp) {
-//        levelLabel.setText("Lv." + level);
-//        hygieneBar.setValue(xp % 100);
-//    }
-
     public void updateStateLabel(String stateText) {
         stateLabel.setText(stateText);
     }
@@ -185,7 +173,6 @@ public class PetViewPanel extends JPanel implements PetObserver {
                 );
                 case STATE_CHANGED ->
                         updateStateLabel(pet.getPetState().getClass().getSimpleName().replace("State", ""));
-                // case AGE_CHANGED -> updateLevel(pet.getAge(), 0); // TODO: swap 0 for real XP when you have it
             }
         });
     }

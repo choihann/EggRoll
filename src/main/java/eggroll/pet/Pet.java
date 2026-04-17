@@ -1,14 +1,18 @@
 package eggroll.pet;
 
 import eggroll.gacha.GachaRarity;
+import eggroll.observer.IPetObservable;
 import eggroll.observer.PetEvent;
 import eggroll.observer.PetObserver;
-import eggroll.pet.petevolutionstrategy.*;
+import eggroll.pet.petevolutionstrategy.IEvolutionStrategy;
+import eggroll.pet.petevolutionstrategy.JuvenileEvolutionStrategy;
+import eggroll.pet.petevolutionstrategy.StrategyFactory;
+import eggroll.pet.petevolutionstrategy.UnbornEvolutionStrategy;
 import eggroll.pet.petstate.PetState;
 
 import java.util.*;
 
-abstract public class Pet implements IPet{
+abstract public class Pet implements IPet, IPetObservable {
     protected final static int DEFAULT_STARTING_STAT = 3;
     protected final static int DEFAULT_MAX_STAT = 5;
     protected final static int DEFAULT_MINIMUM_STAT = 2;
@@ -410,7 +414,10 @@ abstract public class Pet implements IPet{
         }
     }
 
-    private void notifyObservers(PetEvent event) {
+    // TODO: Should notify be public? It was private, but then I implemented IPetObservable, so I couldn't keep it private
+    // TODO: So I was considering whether or not I should remove it from IPetObservable to keep it private on pet
+    // TODO: after all, observers shouldn't be triggered externally
+    public void notifyObservers(PetEvent event) {
         if (petObservers == null) {
             return;
         }
