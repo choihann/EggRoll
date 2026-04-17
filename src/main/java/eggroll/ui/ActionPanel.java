@@ -33,7 +33,18 @@ public class ActionPanel extends JPanel implements PetObserver {
         add(UIComponents.sectionHeader("Actions"), BorderLayout.NORTH);
 
         // button grid
-        JPanel primaryGrid = new JPanel(new GridLayout(2, 2, Theme.PAD_MD, Theme.PAD_MD));
+        JPanel primaryGrid = new JPanel(new GridLayout(2, 2, Theme.PAD_MD, Theme.PAD_MD)) {
+            @Override
+            public Dimension getMinimumSize() {
+                return new Dimension(200, 160);
+            }
+
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(super.getPreferredSize().width, 160);
+            }
+        };
+        primaryGrid.setOpaque(false);
         primaryGrid.setOpaque(false);
 
         // for now, I use emojis in place of actual images because it feels strangely empty
@@ -62,7 +73,16 @@ public class ActionPanel extends JPanel implements PetObserver {
         body.add(Box.createVerticalStrut(Theme.PAD_SM));
         body.add(feedbackLabel);
 
-        add(body, BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(body);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(12);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.getViewport().setBackground(Theme.BG_BASE);
+
+        add(scrollPane, BorderLayout.CENTER);
     }
 
     // TODO: bind to the commands
