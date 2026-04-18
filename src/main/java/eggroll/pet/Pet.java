@@ -15,6 +15,7 @@ abstract public class Pet implements IPet, IPetObservable {
     protected final static int STARTING_STAT = 3;
     protected final static int MINIMUM_STAT = 2;
     protected final static int STAT_INCREMENT = 1;
+    protected final static int STAT_DECREMENT = 1;
     private transient List<PetObserver> petObservers = new ArrayList<>();
 
     public static int getStartingStat() {
@@ -141,6 +142,7 @@ abstract public class Pet implements IPet, IPetObservable {
     public PetState getHungryState(){
         return this.hungryState;
     }
+    public Set<PetStatType> getPenalizableStats() {return this.currentState.getPenalizableStats();}
 
     public void setCurrentState(PetState newState) {
         this.currentState = newState;
@@ -173,7 +175,11 @@ abstract public class Pet implements IPet, IPetObservable {
     // maybe it has some negative consequence depending on personality
     // i.e. if a pet likes to laze around, maybe it gets extra stinky because it didn't shower.
 
-    abstract public boolean applyPenalty(boolean needsPenalty);
+    public boolean applyPenalty(boolean needsPenalty){
+        if(needsPenalty){
+            lowerRandomStat(STAT_DECREMENT, currentState.getPenalizableStats());
+        }
+    }
 
     public void increaseStat(int amount, PetStatType type) {
         switch (type) {
@@ -228,40 +234,32 @@ abstract public class Pet implements IPet, IPetObservable {
         return false;
     }
 
-    public void lowerRandomStat(int amount) {
-        if (hygiene == 0 && happiness == 0 && fullness == 0 && energy == 0) {
+    public void lowerRandomStat(int amount, Set<PetStatType> penalizableStats) {
+        if (penalizableStats.isEmpty()) {
             return;
         }
 
-        while (true) {
-            int choice = (int)(Math.random() * 5);
+        int choice = (int) (Math.random() * penalizableStats.size());
+        int i = 0;
 
-            switch (choice) {
-                case 0:
-                    if (hygiene > 0) {
+        for (PetStatType statType : penalizableStats) {
+            if (i == choice) {
+                switch (statType) {
+                    case HYGIENE:
                         hygiene = Math.max(0, hygiene - amount);
                         return;
-                    }
-                    break;
-                case 1:
-                    if (happiness > 0) {
+                    case HAPPINESS:
                         happiness = Math.max(0, happiness - amount);
                         return;
-                    }
-                    break;
-                case 2:
-                    if (fullness > 0) {
+                    case FULLNESS:
                         fullness = Math.max(0, fullness - amount);
                         return;
-                    }
-                    break;
-                case 3:
-                    if (energy > 0) {
+                    case ENERGY:
                         energy = Math.max(0, energy - amount);
                         return;
-                    }
-                    break;
+                }
             }
+            i++;
         }
     }
 
