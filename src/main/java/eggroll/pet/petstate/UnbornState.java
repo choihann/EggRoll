@@ -17,11 +17,6 @@ public class UnbornState extends PetState {
 
 
     @Override
-    public Set<PetStatType> getPenalizableStats() {
-        return penalizableStatTypes;
-    }
-
-    @Override
     public boolean canNap() {
         return false;
     }

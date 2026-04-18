@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PetTest {
     Pet animalPet;
@@ -71,5 +71,15 @@ public class PetTest {
 
         animalPet.bathe();
         assertTrue(animalPet.getHygieneStat() == hygieneBefore);
+    }
+
+    @Test
+    void testPetInHungryStateWontHaveFullnessAsAPenalizableStat(){
+        EvolutionStrategy juvenileEvo = animalPet.strategyFactory.newJuvenileStrategy();
+        animalPet.setCurrentStrategy(juvenileEvo);
+        animalPet.setCurrentState(animalPet.getHungryState());
+        Set<PetStatType> thePenalizableStats = animalPet.getPenalizableStats();
+
+        assertFalse(thePenalizableStats.contains(PetStatType.FULLNESS));
     }
 }

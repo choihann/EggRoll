@@ -37,13 +37,4 @@ public class Cat extends Pet{
         increaseStat(STAT_INCREMENT, PetStatType.HAPPINESS);// and the cat's activity also makes it a little happier :)
         return true;
     }
-
-    @Override
-    public boolean applyPenalty(boolean needsPenalty) {
-        if(needsPenalty){
-            happiness =- 1;
-            return true;
-        }
-        return false;
-    }
 }
