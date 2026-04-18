@@ -272,15 +272,15 @@ public class GameController {
     }
 
     private int scaledPetStatusBar(int raw) {
-        return (int) ((raw / (float) Pet.getDefaultMaxStat()) * 100);
+        return (int) ((raw / (float) Pet.getMaxStat()) * 100); // TODO: need to scale off of individual concrete pets cus they have changing strategies, therefore changing max_stats
     }
 
     // TODO: replace later
     private String currentMoodEmoji(Pet pet) {
-        if (pet.getHappinessStat() >= Pet.getDefaultMaxStat()) return "😊 Happy";
-        if (pet.getEnergyStat() <= Pet.getDefaultMinimumStat()) return "😴 Tired";
-        if (pet.getFullnessStat() <= Pet.getDefaultMinimumStat()) return "🍖 Hungry";
-        if (pet.getHygieneStat() <= Pet.getDefaultMinimumStat()) return "🛁 Dirty";
+        if (pet.getHappinessStat() >= Pet.getMaxStat()) return "😊 Happy";
+        if (pet.getEnergyStat() <= Pet.getMinimumStat()) return "😴 Tired";
+        if (pet.getFullnessStat() <= Pet.getMinimumStat()) return "🍖 Hungry";
+        if (pet.getHygieneStat() <= Pet.getMinimumStat()) return "🛁 Dirty";
         return "😊 Content";
     }
 

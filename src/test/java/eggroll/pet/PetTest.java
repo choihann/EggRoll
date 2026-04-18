@@ -1,6 +1,7 @@
 package eggroll.pet;
 
-import eggroll.pet.petstate.PetState;
+import eggroll.pet.petevolutionstrategy.EvolutionStrategy;
+import eggroll.pet.petstate.IPetState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -48,31 +49,6 @@ public class PetTest {
         assertTrue(animalPet.isStatMax());
     }
 
-    @Test
-    void testQueueingStatesActuallyQueuesStatesToThePet(){
-        animalPet.pushToQueuedStates(animalPet.getDirtyState());
-        animalPet.pushToQueuedStates(animalPet.getTiredState());
-        animalPet.pushToQueuedStates(animalPet.getSadState());
-        animalPet.pushToQueuedStates(animalPet.getHungryState());
-        animalPet.pushToQueuedStates(animalPet.getNormalState());
-
-        Queue<PetState> expectedStates = new LinkedList<>();
-        expectedStates.add(animalPet.getHungryState());
-        expectedStates.add(animalPet.getDirtyState());
-        expectedStates.add(animalPet.getTiredState());
-        expectedStates.add(animalPet.getSadState());
-        expectedStates.add(animalPet.getNormalState());
-
-        assertTrue(animalPet.getQueuedStates().containsAll(expectedStates));
-    }
-
-    @Test
-    void testPollingQueueStatesActuallyPolls(){
-        animalPet.pushToQueuedStates(animalPet.getNormalState());
-        animalPet.setCurrentState(animalPet.popOffQueuedState());
-
-        assertEquals(animalPet.getNormalState(), animalPet.getCurrentState());
-    }
 
     @Test
     void testCheckIfNeedsPenaltyReturnsProperly(){
@@ -84,5 +60,16 @@ public class PetTest {
 
         assertEquals(true, animalPet.canEvolve());
 
+    }
+
+    @Test
+    void testPetInHungryStateWontBathe(){
+        EvolutionStrategy juvenileEvo = animalPet.strategyFactory.newJuvenileStrategy();
+        animalPet.setCurrentStrategy(juvenileEvo);
+        animalPet.setCurrentState(animalPet.getHungryState());
+        int hygieneBefore = animalPet.getHygieneStat();
+
+        animalPet.bathe();
+        assertTrue(animalPet.getHygieneStat() == hygieneBefore);
     }
 }

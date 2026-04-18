@@ -8,7 +8,7 @@ public abstract class EvolutionStrategy implements IEvolutionStrategy{
 
     protected EvolutionStrategy(int maxStat){ this.maxStat = maxStat; }
 
-    protected int getMaxStat(){ return maxStat; };
+    public int getMaxStat(){ return maxStat; };
 
     public abstract boolean canEvolve(Pet myself);
 

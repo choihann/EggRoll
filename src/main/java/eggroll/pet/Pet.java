@@ -4,36 +4,25 @@ import eggroll.gacha.GachaRarity;
 import eggroll.observer.IPetObservable;
 import eggroll.observer.PetEvent;
 import eggroll.observer.PetObserver;
-import eggroll.pet.petevolutionstrategy.IEvolutionStrategy;
-import eggroll.pet.petevolutionstrategy.JuvenileEvolutionStrategy;
-import eggroll.pet.petevolutionstrategy.StrategyFactory;
-import eggroll.pet.petevolutionstrategy.UnbornEvolutionStrategy;
+import eggroll.pet.petevolutionstrategy.*;
+import eggroll.pet.petstate.IPetState;
 import eggroll.pet.petstate.PetState;
+import eggroll.pet.petstate.StateFactory;
 
 import java.util.*;
 
 abstract public class Pet implements IPet, IPetObservable {
-    protected final static int DEFAULT_STARTING_STAT = 3;
-    protected final static int DEFAULT_MAX_STAT = 5;
-    protected final static int DEFAULT_MINIMUM_STAT = 2;
-    protected final static int DEFAULT_STAT_INCREMENT = 1;
-    protected final static int DEFAULT_EVOLUTION_AGE = 5;
+    protected final static int STARTING_STAT = 3;
+    protected final static int MINIMUM_STAT = 2;
+    protected final static int STAT_INCREMENT = 1;
     private transient List<PetObserver> petObservers = new ArrayList<>();
 
-    public static int getDefaultStartingStat() {
-        return DEFAULT_STARTING_STAT;
+    public static int getStartingStat() {
+        return STARTING_STAT;
     }
 
-    public static int getDefaultMaxStat() {
-        return DEFAULT_MAX_STAT;
-    }
-
-    public static int getDefaultMinimumStat() {
-        return DEFAULT_MINIMUM_STAT;
-    }
-
-    public static int getDefaultStatIncrement() {
-        return DEFAULT_STAT_INCREMENT;
+    public static int getMinimumStat() {
+        return MINIMUM_STAT;
     }
 
     protected PetState unbornState;
@@ -45,10 +34,9 @@ abstract public class Pet implements IPet, IPetObservable {
 
     protected PetState currentState;
 
-    private IEvolutionStrategy currentEvolutionStrategy;
-    private StrategyFactory strategyFactory;
-
-    protected Queue<PetState> queuedStates = new LinkedList<>();
+    protected EvolutionStrategy currentEvolutionStrategy;
+    protected StrategyFactory strategyFactory;
+    protected StateFactory stateFactory;
 
     protected String name;
     protected String species;
@@ -69,14 +57,19 @@ abstract public class Pet implements IPet, IPetObservable {
         this.species = species;
         this.rarity = rarity;
 
-        this.hygiene = DEFAULT_STARTING_STAT;
-        this.happiness = DEFAULT_STARTING_STAT;
-        this.fullness = DEFAULT_STARTING_STAT;
-        this.energy = DEFAULT_STARTING_STAT;
+        this.unbornState = stateFactory.newUnbornState(this);
+        this.normalState = stateFactory.newNormalState(this);
+        this.dirtyState = stateFactory.newDirtyState(this);
+        this.tiredState = stateFactory.newTiredState(this);
+        this.hungryState = stateFactory.newHungryState(this);
+
+        this.hygiene = STARTING_STAT;
+        this.happiness = STARTING_STAT;
+        this.fullness = STARTING_STAT;
+        this.energy = STARTING_STAT;
 
         this.currentState = unbornState;
         this.currentEvolutionStrategy = strategyFactory.newUnbornStrategy();
-        this.age = 0;
         this.needsPenalty = false;
         this.isEgg = true;
     }
@@ -89,13 +82,12 @@ abstract public class Pet implements IPet, IPetObservable {
         this.species = "NULL";
         this.rarity = rarity;
 
-        this.hygiene = DEFAULT_STARTING_STAT;
-        this.happiness = DEFAULT_STARTING_STAT;
-        this.fullness = DEFAULT_STARTING_STAT;
-        this.energy = DEFAULT_STARTING_STAT;
+        this.hygiene = STARTING_STAT;
+        this.happiness = STARTING_STAT;
+        this.fullness = STARTING_STAT;
+        this.energy = STARTING_STAT;
 
         this.currentState = unbornState;
-        this.age = 0;
         this.needsPenalty = false;
         this.isEgg = true;
     }
@@ -105,9 +97,6 @@ abstract public class Pet implements IPet, IPetObservable {
     }
     public String getSpecies(){
         return this.species;
-    }
-    public Queue<PetState> getQueuedStates(){
-        return queuedStates;
     }
     public PetState getPetState(){
         return this.currentState;
@@ -130,9 +119,6 @@ abstract public class Pet implements IPet, IPetObservable {
     }
     public int getEnergyStat(){
         return this.energy;
-    }
-    public int getAge(){
-        return this.age;
     }
     public PetState getUnbornState(){
         return this.unbornState;
@@ -161,8 +147,8 @@ abstract public class Pet implements IPet, IPetObservable {
         notifyObservers(PetEvent.STATE_CHANGED);
     }
 
-    public void setCurrentStrategy(IEvolutionStrategy newIEvolutionStrategy) {
-        this.currentEvolutionStrategy = newIEvolutionStrategy;
+    public void setCurrentStrategy(EvolutionStrategy newEvolutionStrategy) {
+        this.currentEvolutionStrategy = newEvolutionStrategy;
         //do observers need to know when a pet evolves?
         // probably..?
         //notifyObservers(PetEvent.EVOLUTION_OCCURED);
@@ -231,51 +217,12 @@ abstract public class Pet implements IPet, IPetObservable {
         }
     }
 
-    public void recoverRandomStat(int amount) {
-        if (hygiene == DEFAULT_MAX_STAT &&
-                happiness == DEFAULT_MAX_STAT &&
-                fullness == DEFAULT_MAX_STAT &&
-                energy == DEFAULT_MAX_STAT) {
-            return;
-        }
-
-        while (true) {
-            int choice = (int)(Math.random() * 5);
-
-            switch (choice) {
-                case 0:
-                    if (hygiene < DEFAULT_MAX_STAT) {
-                        hygiene = Math.min(DEFAULT_MAX_STAT, hygiene + amount);
-                        return;
-                    }
-                    break;
-
-                case 1:
-                    if (happiness < DEFAULT_MAX_STAT) {
-                        happiness = Math.min(DEFAULT_MAX_STAT, happiness + amount);
-                        return;
-                    }
-                    break;
-
-                case 2:
-                    if (fullness < DEFAULT_MAX_STAT) {
-                        fullness = Math.min(DEFAULT_MAX_STAT, fullness + amount);
-                        return;
-                    }
-                    break;
-
-                case 3:
-                    if (energy < DEFAULT_MAX_STAT) {
-                        energy = Math.min(DEFAULT_MAX_STAT, energy + amount);
-                        return;
-                    }
-                    break;
-            }
-        }
+    public int getMaxStat(){
+        return currentEvolutionStrategy.getMaxStat();
     }
 
     public boolean isStatMax(){
-        if(this.happiness >= DEFAULT_MAX_STAT){
+        if(this.happiness >= currentEvolutionStrategy.getMaxStat()){
             return true;
         }
         return false;
@@ -318,28 +265,24 @@ abstract public class Pet implements IPet, IPetObservable {
         }
     }
 
-    public void growOlder(){
-        this.age += 1;
-    }
-
     public void nap(){
-        if (currentState != null) {
-            currentState.nap(DEFAULT_MAX_STAT);
+        if (currentState.canNap()) {
+            increaseStat(STAT_INCREMENT, PetStatType.ENERGY);
         }
     }
     public void eat(){
-        if (currentState != null) {
-            currentState.eat(DEFAULT_MAX_STAT);
+        if (currentState.canEat()) {
+            increaseStat(STAT_INCREMENT, PetStatType.FULLNESS);
         }
     }
     public void play(){
-        if (currentState != null) {
-            currentState.play(DEFAULT_MAX_STAT);
+        if (currentState.canPlay()) {
+            increaseStat(STAT_INCREMENT, PetStatType.HAPPINESS);
         }
     }
     public void bathe(){
-        if (currentState != null) {
-            currentState.bathe(DEFAULT_MAX_STAT);
+        if (currentState.canBathe()) {
+            increaseStat(STAT_INCREMENT, PetStatType.HYGIENE);
         }
     }
 
@@ -356,6 +299,7 @@ abstract public class Pet implements IPet, IPetObservable {
     private void changeStrategy(){
         if(currentEvolutionStrategy instanceof UnbornEvolutionStrategy){
                 setCurrentStrategy((strategyFactory.newJuvenileStrategy()));
+                setIsEgg(false);
         } else if (currentEvolutionStrategy instanceof JuvenileEvolutionStrategy) {
             setCurrentStrategy((strategyFactory.newAdultStrategy()));
         } else {
@@ -363,35 +307,26 @@ abstract public class Pet implements IPet, IPetObservable {
         }
     }
 
-    public void pushToQueuedStates(PetState state){
-        if(isEgg){
-            this.queuedStates.add(unbornState);
-            return; //eggs can't be in any other state.
+    public PetState determineNextState(){ // Branch logic hard-codes a priority,
+        // Unborn tree
+        if(this.happiness == currentEvolutionStrategy.getMaxStat() && isEgg){ // "evolve" the state part of the pet.
+            return this.normalState;
+        } else if (isEgg) {
+            return this.unbornState;
         }
-        if(hygiene <= DEFAULT_MINIMUM_STAT){
-            this.queuedStates.add(dirtyState);
-        }
-        if(fullness <= DEFAULT_MINIMUM_STAT){
-            this.queuedStates.add(hungryState);
-        }
-        if(energy <= DEFAULT_MINIMUM_STAT){
-            this.queuedStates.add(tiredState);
-        }
-        if(happiness <= DEFAULT_MINIMUM_STAT){
-            this.queuedStates.add(sadState);
-        }
-        if(
-            hygiene > DEFAULT_MINIMUM_STAT &&
-            energy > DEFAULT_MINIMUM_STAT &&
-            fullness > DEFAULT_MINIMUM_STAT &&
-            happiness > DEFAULT_MINIMUM_STAT){
-                this.queuedStates.add(normalState);
+        // Alive tree
+        if(this.fullness < MINIMUM_STAT ){ // #1 Hunger
+            return this.hungryState;
+        } else if ( this.energy < MINIMUM_STAT ) { // #2 Tiredness
+            return this.tiredState;
+        } else if ( this.hygiene < MINIMUM_STAT ) { // #3 Dirtiness
+            return this.dirtyState;
+        } else { // if none of those stats are below threshhold, we are good.
+            return this.normalState;
         }
     }
-
-    public PetState popOffQueuedState(){
-        PetState newPetState = queuedStates.poll();
-        return newPetState;
+    public void advanceState(){ // call this at the beginning of each turn?
+        setCurrentState(determineNextState());
     }
 
     public boolean checkIfNeedsPenalty(){

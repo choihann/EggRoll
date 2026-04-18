@@ -4,7 +4,6 @@ import eggroll.gacha.GachaRarity;
 
 public class Dog extends Pet{
     static protected String DEFAULT_DOG_NAME = "Archie";
-    private final Integer UNIQUE_MAX_FULLNESS = 7;
 
     public Dog(String name, String species, GachaRarity rarity) {
         super(name, species, rarity);
@@ -15,10 +14,16 @@ public class Dog extends Pet{
         this.species = "Dog";
         this.rarity = GachaRarity.Common;
 
-        this.hygiene = DEFAULT_STARTING_STAT;
-        this.happiness = DEFAULT_STARTING_STAT;
-        this.fullness = DEFAULT_STARTING_STAT;
-        this.energy = DEFAULT_STARTING_STAT;
+        this.unbornState = stateFactory.newUnbornState(this);
+        this.normalState = stateFactory.newNormalState(this);
+        this.dirtyState = stateFactory.newDirtyState(this);
+        this.tiredState = stateFactory.newTiredState(this);
+        this.hungryState = stateFactory.newHungryState(this);
+
+        this.hygiene = STARTING_STAT;
+        this.happiness = STARTING_STAT;
+        this.fullness = STARTING_STAT;
+        this.energy = STARTING_STAT;
 
         this.currentState = unbornState;
         this.age = 0;
@@ -29,8 +34,8 @@ public class Dog extends Pet{
     @Override
     public boolean doActivity() {
         System.out.print(this.name + " chewed on some milk bones.");
-        increaseStat(DEFAULT_STAT_INCREMENT, PetStatType.FULLNESS); // the dog's activity as a foodie is snacking.
-        increaseStat(DEFAULT_STAT_INCREMENT, PetStatType.HAPPINESS);// and the dog's activity also makes it a little happier :)
+        increaseStat(STAT_INCREMENT, PetStatType.FULLNESS); // the dog's activity as a foodie is snacking.
+        increaseStat(STAT_INCREMENT, PetStatType.HAPPINESS);// and the dog's activity also makes it a little happier :)
         return true;
     }
 
@@ -41,10 +46,5 @@ public class Dog extends Pet{
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void eat(){
-        currentState.eat(UNIQUE_MAX_FULLNESS);
     }
 }

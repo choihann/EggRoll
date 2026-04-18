@@ -3,35 +3,53 @@ package eggroll.pet.petstate;
 import eggroll.pet.Pet;
 import eggroll.pet.PetStatType;
 
-public class HungryState implements PetState {
-    private final static int DEFAULT_INCREMENT = 1;
-    private final static int HUNGRY_FULLNESS_INCREMENT = 2;
+import java.util.EnumSet;
 
-    Pet pet;
+public class HungryState extends PetState {
 
-    @Override
-    public void nap(int maximumEnergy) {
-        System.out.print(pet.getName() + " is too hungry and can't fall asleep!");
+    public HungryState(Pet pet) {
+        super(pet);
+        this.penalizableStatTypes = EnumSet.of(PetStatType.HYGIENE, PetStatType.ENERGY, PetStatType.HAPPINESS);
     }
 
     @Override
-    public void eat(int maximumFullness) {
-        pet.increaseStat(HUNGRY_FULLNESS_INCREMENT, PetStatType.FULLNESS);
-        System.out.print(pet.getName() + "had a feast fit for kings. Fullness is now " + pet.getFullnessStat());
+    public boolean canNap() {
+        return false;
     }
 
     @Override
-    public void play(int maximumHappiness) {
-        System.out.print(pet.getName() + " is too hungry to play!");
+    public boolean canEat() {
+        return true;
     }
 
     @Override
-    public void bathe(int maximumHygiene) {
-        System.out.print(pet.getName() + " is too hungry to take a bath!");
+    public boolean canPlay() {
+        return false;
     }
 
     @Override
-    public void changeState(int minimumStat) {
-        // TODO: PetState has this
+    public boolean canBathe() {
+        return false;
     }
+
+//    @Override
+//    public void nap(int maximumEnergy) {
+//        System.out.print(pet.getName() + " is too hungry and can't fall asleep!");
+//    }
+//
+//    @Override
+//    public void eat(int maximumFullness) {
+//        System.out.print(pet.getName() + "had a feast fit for kings. Fullness is now " + pet.getFullnessStat());
+//    }
+//
+//    @Override
+//    public void play(int maximumHappiness) {
+//        System.out.print(pet.getName() + " is too hungry to play!");
+//    }
+//
+//    @Override
+//    public void bathe(int maximumHygiene) {
+//        System.out.print(pet.getName() + " is too hungry to take a bath!");
+//    }
+
 }
