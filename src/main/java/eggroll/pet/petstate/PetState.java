@@ -1,9 +1,24 @@
 package eggroll.pet.petstate;
 
-public interface PetState {
-    public void nap(int maximumEnergy);
-    public void eat(int maximumFullness);
-    public void play(int maximumHappiness);
-    public void bathe(int maximumHygiene);
-    public void changeState(int minimumStat);
+import eggroll.pet.Pet;
+import eggroll.pet.PetStatType;
+
+import java.util.EnumSet;
+import java.util.Set;
+
+abstract public class PetState implements IPetState{
+    protected EnumSet<PetStatType> penalizableStatTypes;
+    protected final Pet pet;
+
+    public PetState(Pet pet) {
+        this.pet = pet;
+        this.penalizableStatTypes =  EnumSet.allOf(PetStatType.class);
+    }
+    public Set<PetStatType> getPenalizableStats(){
+        return penalizableStatTypes;
+    };
+    abstract public boolean canNap();
+    abstract public boolean canEat();
+    abstract public boolean canPlay();
+    abstract public boolean canBathe();
 }

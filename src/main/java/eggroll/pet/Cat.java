@@ -4,7 +4,6 @@ import eggroll.gacha.GachaRarity;
 
 public class Cat extends Pet{
     static protected String DEFAULT_CAT_NAME = "Mittens";
-    private final Integer UNIQUE_MAX_ENERGY = 7;
 
     public Cat(String name, String species, GachaRarity rarity) {
         super(name, species, rarity);
@@ -15,10 +14,16 @@ public class Cat extends Pet{
         this.species = "Cat";
         this.rarity = GachaRarity.Common;
 
-        this.hygiene = DEFAULT_STARTING_STAT;
-        this.happiness = DEFAULT_STARTING_STAT;
-        this.fullness = DEFAULT_STARTING_STAT;
-        this.energy = DEFAULT_STARTING_STAT;
+        this.unbornState = stateFactory.newUnbornState(this);
+        this.normalState = stateFactory.newNormalState(this);
+        this.dirtyState = stateFactory.newDirtyState(this);
+        this.tiredState = stateFactory.newTiredState(this);
+        this.hungryState = stateFactory.newHungryState(this);
+
+        this.hygiene = STARTING_STAT;
+        this.happiness = STARTING_STAT;
+        this.fullness = STARTING_STAT;
+        this.energy = STARTING_STAT;
         this.currentState = unbornState;
         this.age = 0;
         this.needsPenalty = false;
@@ -28,8 +33,8 @@ public class Cat extends Pet{
     @Override
     public boolean doActivity() {
         System.out.print(this.name + " decided to take a nap in its free time. Oh so sleepy!");
-        increaseStat(DEFAULT_STAT_INCREMENT, PetStatType.ENERGY); // the cat's activity as a LAZY animal is napping
-        increaseStat(DEFAULT_STAT_INCREMENT, PetStatType.HAPPINESS);// and the cat's activity also makes it a little happier :)
+        increaseStat(STAT_INCREMENT, PetStatType.ENERGY); // the cat's activity as a LAZY animal is napping
+        increaseStat(STAT_INCREMENT, PetStatType.HAPPINESS);// and the cat's activity also makes it a little happier :)
         return true;
     }
 
@@ -41,12 +46,4 @@ public class Cat extends Pet{
         }
         return false;
     }
-
-    @Override
-    public void nap(){
-        if (currentState != null) {
-            currentState.nap(UNIQUE_MAX_ENERGY);
-        }
-    }
-
 }

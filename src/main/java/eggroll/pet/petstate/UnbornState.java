@@ -3,41 +3,42 @@ package eggroll.pet.petstate;
 import eggroll.pet.Pet;
 import eggroll.pet.PetStatType;
 
-public class UnbornState implements PetState{
-    // All pets have the same behavior in Unborn state
-    // Can only be played with. Other stats don't go down while in this state.
-    private final static int DEFAULT_INCREMENT = 1;
+import java.util.EnumSet;
+import java.util.Set;
 
-    Pet pet;
+public class UnbornState extends PetState {
+    // Can only be played with. Other stats don't go down while in this state.
+    private final EnumSet<PetStatType> penalizableStatTypes;
 
     public UnbornState(Pet pet) {
-        this.pet = pet;
+        super(pet);
+        this.penalizableStatTypes = EnumSet.noneOf(PetStatType.class); // Empty petStatType set.
+    }
+
+
+    @Override
+    public Set<PetStatType> getPenalizableStats() {
+        return penalizableStatTypes;
     }
 
     @Override
-    public void nap(int maximumEnergy) {
+    public boolean canNap() {
+        return false;
     }
 
     @Override
-    public void eat(int maximumFullness) {
+    public boolean canEat() {
+        return false;
     }
 
     @Override
-    public void play(int maximumHappiness) {
-        if(pet.getHappinessStat() >= maximumHappiness){
-            System.out.print(pet.getName() + " would rather crack open its shell...!");
-            return;
-        }
-        pet.increaseStat(DEFAULT_INCREMENT, PetStatType.HAPPINESS);
-        System.out.print("You rolled around " + pet.getName() + ". Happiness is now " + pet.getHappinessStat());
+    public boolean canPlay() {
+        return true;
     }
 
     @Override
-    public void bathe(int maximumHygiene) {
+    public boolean canBathe() {
+        return false;
     }
 
-    @Override
-    public void changeState(int minimumStat) {
-        // TODO
-    }
 }
