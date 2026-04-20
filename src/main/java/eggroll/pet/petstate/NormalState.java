@@ -1,15 +1,6 @@
 package eggroll.pet.petstate;
 
-import eggroll.pet.Pet;
-import eggroll.pet.PetStatType;
-
-import java.util.EnumSet;
-
 public class NormalState extends PetState {
-
-    public NormalState(Pet pet) {
-        super(pet);
-    }
 
     @Override
     public boolean canNap() {

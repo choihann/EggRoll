@@ -14,18 +14,18 @@ public class Cat extends Pet{
         this.species = "Cat";
         this.rarity = GachaRarity.Common;
 
-        this.unbornState = stateFactory.newUnbornState(this);
-        this.normalState = stateFactory.newNormalState(this);
-        this.dirtyState = stateFactory.newDirtyState(this);
-        this.tiredState = stateFactory.newTiredState(this);
-        this.hungryState = stateFactory.newHungryState(this);
+        this.unbornState = stateFactory.newUnbornState();
+        this.normalState = stateFactory.newNormalState();
+        this.dirtyState = stateFactory.newDirtyState();
+        this.tiredState = stateFactory.newTiredState();
+        this.hungryState = stateFactory.newHungryState();
 
         this.hygiene = STARTING_STAT;
         this.happiness = STARTING_STAT;
         this.fullness = STARTING_STAT;
         this.energy = STARTING_STAT;
         this.currentState = unbornState;
-        this.age = 0;
+        this.currentEvolutionStrategy = strategyFactory.newUnbornStrategy();
         this.needsPenalty = false;
         this.isEgg = true;
     }

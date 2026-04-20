@@ -38,7 +38,6 @@ public class EggRoll {
         }
 
         command.execute();
-        activePet.lowerRandomStat(1, activePet.getPenalizableStats());
         actionsRemaining--;
 
         if (actionsRemaining <= 0) {
@@ -51,6 +50,9 @@ public class EggRoll {
     private void advanceDay(Pet activePet) {
         dayCount++;
         actionsRemaining = ACTIONS_PER_DAY;
+        activePet.evolve();
+        activePet.advanceState();
+        activePet.lowerRandomStat(1, activePet.getPenalizableStats());
         System.out.println("[DayManager] Day " + dayCount + " begins!");
     }
 

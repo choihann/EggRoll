@@ -34,7 +34,9 @@ public class SaveManager {
         }
         try {
             String json = Files.readString(SAVE_PATH);
-            return GSON.fromJson(json, EggRoll.class);
+            EggRoll state = GSON.fromJson(json, EggRoll.class);
+            state.ownedPets.forEach(Pet::initializeTransientsForPet);
+            return state;
         } catch (IOException ioException) {
             System.err.println("[SaveManager] Failed to load: " + ioException.getMessage());
             return EggRoll.newGame();
@@ -52,6 +54,7 @@ public class SaveManager {
     private static Gson buildGson() {
         RuntimeTypeAdapterFactory<Pet> petAdapter = RuntimeTypeAdapterFactory.of(Pet.class, "type")
                 .registerSubtype(Cat.class, "Cat");
+        // TODO: for new types
         // .registerSubtype(Dog.class, "Dog") or whatever we decide on new stuff to be
 
         RuntimeTypeAdapterFactory<Potion> potionAdapter =

@@ -1,14 +1,12 @@
 package eggroll.pet.petstate;
 
-import eggroll.pet.Pet;
 import eggroll.pet.PetStatType;
 
 import java.util.EnumSet;
 
 public class TiredState extends PetState {
 
-    public TiredState(Pet pet) {
-        super(pet);
+    public TiredState() {
         this.penalizableStatTypes = EnumSet.of(PetStatType.HYGIENE, PetStatType.FULLNESS, PetStatType.HAPPINESS);
     }
 

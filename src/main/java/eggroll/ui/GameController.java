@@ -151,6 +151,7 @@ public class GameController {
                 scaledPetStatusBar(pet.getHygieneStat(), pet)
         );
         window.petView.updateStateLabel(currentMoodEmoji(pet));
+        window.actionPanel.applyPetState(pet.getPetState());
     }
 
     private void refreshCollection() {

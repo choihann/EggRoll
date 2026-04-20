@@ -1,21 +1,23 @@
 package eggroll.pet.petstate;
 
-import eggroll.pet.Pet;
-
 public class StateFactory { // simple state factory to avoid new usage
-    public UnbornState newUnbornState(Pet pet) {
-        return new UnbornState(pet);
+    public UnbornState newUnbornState() {
+        return new UnbornState();
     }
-    public DirtyState newDirtyState(Pet pet) {
-        return new DirtyState(pet);
+
+    public DirtyState newDirtyState() {
+        return new DirtyState();
     }
-    public TiredState newTiredState(Pet pet) {
-        return new TiredState(pet);
+
+    public TiredState newTiredState() {
+        return new TiredState();
     }
-    public NormalState newNormalState(Pet pet) {
-        return new NormalState(pet);
+
+    public NormalState newNormalState() {
+        return new NormalState();
     }
-    public HungryState newHungryState(Pet pet) {
-        return new HungryState(pet);
+
+    public HungryState newHungryState() {
+        return new HungryState();
     }
 }
