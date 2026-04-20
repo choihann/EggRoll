@@ -11,9 +11,14 @@ abstract public class PetState implements IPetState{
     public PetState() {
         this.penalizableStatTypes =  EnumSet.allOf(PetStatType.class);
     }
-    public Set<PetStatType> getPenalizableStats(){
+
+    public Set<PetStatType> getPenalizableStats() {
+        if (penalizableStatTypes.isEmpty()) {
+            return EnumSet.noneOf(PetStatType.class);
+        }
         return EnumSet.copyOf(penalizableStatTypes);
-    };
+    }
+
     abstract public boolean canNap();
     abstract public boolean canEat();
     abstract public boolean canPlay();

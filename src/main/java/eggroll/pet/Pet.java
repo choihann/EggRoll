@@ -154,9 +154,7 @@ abstract public class Pet implements IPet, IPetObservable {
 
     public void setCurrentStrategy(EvolutionStrategy newEvolutionStrategy) {
         this.currentEvolutionStrategy = newEvolutionStrategy;
-        //do observers need to know when a pet evolves?
-        // probably..?
-        //notifyObservers(PetEvent.EVOLUTION_OCCURED);
+        notifyObservers(PetEvent.EVOLUTION_OCCURRED);
     }
 
     public void setStat(int amount, PetStatType type) {
@@ -245,28 +243,20 @@ abstract public class Pet implements IPet, IPetObservable {
             return;
         }
 
-        int choice = (int) (Math.random() * penalizableStats.size());
-        int i = 0;
+        int randomIndex = (int) (Math.random() * penalizableStats.size());
+        int currentIndex = 0;
 
         for (PetStatType statType : penalizableStats) {
-            if (i == choice) {
-                switch (statType) {
-                    case HYGIENE:
-                        hygiene = Math.max(0, hygiene - amount);
-                        return;
-                    case HAPPINESS:
-                        happiness = Math.max(0, happiness - amount);
-                        return;
-                    case FULLNESS:
-                        fullness = Math.max(0, fullness - amount);
-                        return;
-                    case ENERGY:
-                        energy = Math.max(0, energy - amount);
-                        return;
-                }
+            if (currentIndex == randomIndex) {
+                decreaseStat(amount, statType);
+                return;
             }
-            i++;
+            currentIndex++;
         }
+    }
+
+    public EvolutionStage getEvolutionStage() {
+        return this.evolutionStage;
     }
 
     public void nap(){
@@ -345,6 +335,7 @@ abstract public class Pet implements IPet, IPetObservable {
         return true;
     }
 
+    // TODO: Ask about whether there's a better way to go about this for game persistence
     public void initializeTransientsForPet() {
         unbornState = stateFactory.newUnbornState();
         normalState = stateFactory.newNormalState();

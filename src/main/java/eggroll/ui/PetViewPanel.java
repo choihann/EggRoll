@@ -164,13 +164,22 @@ public class PetViewPanel extends JPanel implements PetObserver {
     public void onPetEvent(PetEvent event, Pet pet) {
         SwingUtilities.invokeLater(() -> {
             switch (event) {
-                case FULLNESS_CHANGED, HAPPINESS_CHANGED, ENERGY_CHANGED, FITNESS_CHANGED, HYGIENE_CHANGED ->
+                case FULLNESS_CHANGED, HAPPINESS_CHANGED, ENERGY_CHANGED, HYGIENE_CHANGED ->
                         updateStats(
                                 scaledToHundred(pet.getFullnessStat(), pet),
                                 scaledToHundred(pet.getHappinessStat(), pet),
                                 scaledToHundred(pet.getEnergyStat(), pet),
                                 scaledToHundred(pet.getHygieneStat(), pet)
                 );
+                case EVOLUTION_OCCURRED -> {
+                    updateStats(
+                            scaledToHundred(pet.getFullnessStat(), pet),
+                            scaledToHundred(pet.getHappinessStat(), pet),
+                            scaledToHundred(pet.getEnergyStat(), pet),
+                            scaledToHundred(pet.getHygieneStat(), pet)
+                    );
+                    stageLabel.setText(pet.getEvolutionStage().name());
+                }
                 case STATE_CHANGED ->
                         updateStateLabel(pet.getPetState().getClass().getSimpleName().replace("State", ""));
             }
