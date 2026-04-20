@@ -38,7 +38,7 @@ public class EggRoll {
         }
 
         command.execute();
-        activePet.lowerRandomStat(1);
+        activePet.lowerRandomStat(1, activePet.getPenalizableStats());
         actionsRemaining--;
 
         if (actionsRemaining <= 0) {
