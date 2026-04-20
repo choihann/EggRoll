@@ -4,12 +4,17 @@ import eggroll.gacha.GachaRarity;
 import eggroll.observer.IPetObservable;
 import eggroll.observer.PetEvent;
 import eggroll.observer.PetObserver;
-import eggroll.pet.petevolutionstrategy.*;
-import eggroll.pet.petstate.IPetState;
+import eggroll.pet.petevolutionstrategy.EvolutionStrategy;
+import eggroll.pet.petevolutionstrategy.JuvenileEvolutionStrategy;
+import eggroll.pet.petevolutionstrategy.StrategyFactory;
+import eggroll.pet.petevolutionstrategy.UnbornEvolutionStrategy;
 import eggroll.pet.petstate.PetState;
 import eggroll.pet.petstate.StateFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 abstract public class Pet implements IPet, IPetObservable {
     protected final static int STARTING_STAT = 3;
@@ -35,9 +40,9 @@ abstract public class Pet implements IPet, IPetObservable {
 
     protected PetState currentState;
 
-    protected EvolutionStrategy currentEvolutionStrategy;
-    protected StrategyFactory strategyFactory;
-    protected StateFactory stateFactory;
+    protected EvolutionStrategy currentEvolutionStrategy = strategyFactory.newUnbornStrategy();
+    static protected StateFactory stateFactory = new StateFactory();
+    static protected StrategyFactory strategyFactory = new StrategyFactory();
 
     protected String name;
     protected String species;
@@ -178,7 +183,10 @@ abstract public class Pet implements IPet, IPetObservable {
     public boolean applyPenalty(boolean needsPenalty){
         if(needsPenalty){
             lowerRandomStat(STAT_DECREMENT, currentState.getPenalizableStats());
+            return true;
         }
+
+        return false;
     }
 
     public void increaseStat(int amount, PetStatType type) {

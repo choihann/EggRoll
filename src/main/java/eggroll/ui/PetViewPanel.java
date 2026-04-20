@@ -166,10 +166,10 @@ public class PetViewPanel extends JPanel implements PetObserver {
             switch (event) {
                 case FULLNESS_CHANGED, HAPPINESS_CHANGED, ENERGY_CHANGED, FITNESS_CHANGED, HYGIENE_CHANGED ->
                         updateStats(
-                        scaledToHundred(pet.getFullnessStat()),
-                        scaledToHundred(pet.getHappinessStat()),
-                        scaledToHundred(pet.getEnergyStat()),
-                        scaledToHundred(pet.getHygieneStat())
+                                scaledToHundred(pet.getFullnessStat(), pet),
+                                scaledToHundred(pet.getHappinessStat(), pet),
+                                scaledToHundred(pet.getEnergyStat(), pet),
+                                scaledToHundred(pet.getHygieneStat(), pet)
                 );
                 case STATE_CHANGED ->
                         updateStateLabel(pet.getPetState().getClass().getSimpleName().replace("State", ""));
@@ -177,7 +177,7 @@ public class PetViewPanel extends JPanel implements PetObserver {
         });
     }
 
-    private int scaledToHundred(int raw) {
-        return (int) (raw * 100.0 / Pet.getDefaultMaxStat());
+    private int scaledToHundred(int raw, Pet pet) {
+        return (int) (raw * 100.0 / pet.getMaxStat());
     }
 }

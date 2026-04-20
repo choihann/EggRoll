@@ -54,105 +54,65 @@ public class GameController {
         refreshOverlay();
     }
 
+    private <T> void handlePullOneResult(T result, Runnable showResult, Runnable refresh) {
+        if (result == null) {
+            window.navBarOverlay.setNotification("Not enough coins!");
+            return;
+        }
+
+        SaveManager.save(state);
+        window.navBarOverlay.setNotification("");
+        showResult.run();
+        window.gachaPanel.applyCanAfford(state.currency);
+        refreshOverlay();
+        refresh.run();
+    }
+
+    private <T> void handlePullTenResult(List<T> results, Runnable showResult, Runnable refresh) {
+        if (results.isEmpty()) {
+            window.navBarOverlay.setNotification("Not enough coins!");
+            return;
+        }
+
+        SaveManager.save(state);
+        window.navBarOverlay.setNotification("");
+        showResult.run();
+        window.gachaPanel.applyCanAfford(state.currency);
+        refreshOverlay();
+        refresh.run();
+    }
+
     private void wireGacha() {
         window.gachaPanel.setPetRollOneAction(event -> {
-            Pet pet = petGacha.pullOne();
-
-            if (pet == null) {
-                window.navBarOverlay.setNotification("Not enough coins!");
-                return;
-            }
-
-            SaveManager.save(state);
-            window.navBarOverlay.setNotification("");
-
-            window.gachaPanel.showPetResult(
-                    "🥚",
-                    pet.getName(),
-                    pet.getSpecies(),
-                    pet.getRarity().name(),
-                    null
+            Pet pet = petGacha.pullOne(); // no cast
+            handlePullOneResult(pet, () ->
+                            window.gachaPanel.showPetResult("🥚", pet.getName(), pet.getSpecies(), pet.getRarity().name(), null),
+                    this::refreshCollection
             );
-
-            window.gachaPanel.applyCanAfford(state.currency);
-            refreshOverlay();
-            refreshCollection();
         });
 
         window.gachaPanel.setPetRollTenAction(event -> {
             List<Pet> pets = petGacha.pullTen();
-
-            if (pets.isEmpty()) {
-                window.navBarOverlay.setNotification("Not enough coins!");
-                return;
-            }
-
-            SaveManager.save(state);
-            window.navBarOverlay.setNotification("");
-
-            Pet last = pets.get(pets.size() - 1);
-
-            window.gachaPanel.showPetResult(
-                    "🥚",
-                    last.getName(),
-                    last.getSpecies(),
-                    last.getRarity().name(),
-                    "+" + pets.size() + " pets added to your collection!"
+            Pet last = pets.isEmpty() ? null : pets.get(pets.size() - 1);
+            handlePullTenResult(pets, () -> window.gachaPanel.showPetResult("🥚", last.getName(), last.getSpecies(), last.getRarity().name(), "+" + pets.size() + " pets added to your collection!"),
+                    this::refreshCollection
             );
-
-            window.gachaPanel.applyCanAfford(state.currency);
-            refreshOverlay();
-            refreshCollection();
         });
 
         window.gachaPanel.setPotionRollOneAction(event -> {
             Potion potion = potionGacha.pullOne();
-
-            if (potion == null) {
-                window.navBarOverlay.setNotification("Not enough coins!");
-                return;
-            }
-
-            SaveManager.save(state);
-            window.navBarOverlay.setNotification("");
-
-            window.gachaPanel.showPotionResult(
-                    potion.getPotionImage(),
-                    potion.getPotionName(),
-                    "Potion",
-                    potion.getRarity().name(),
-                    potion.getDescription()
+            handlePullOneResult(potion, () -> window.gachaPanel.showPotionResult(potion.getPotionImage(), potion.getPotionName(), "Potion", potion.getRarity().name(), potion.getDescription()),
+                    this::refreshInventory
             );
-
-            window.gachaPanel.applyCanAfford(state.currency);
-            refreshOverlay();
-            refreshInventory();
         });
 
         window.gachaPanel.setPotionRollTenAction(event -> {
             List<Potion> potions = potionGacha.pullTen();
-
-            if (potions.isEmpty()) {
-                window.navBarOverlay.setNotification("Not enough coins!");
-                return;
-            }
-
-            SaveManager.save(state);
-            window.navBarOverlay.setNotification("");
-
-            Potion last = potions.get(potions.size() - 1);
-
-            window.gachaPanel.showPotionResult(
-                    last.getPotionImage(),
-                    last.getPotionName(),
-                    "Potion",
-                    last.getRarity().name(),
-                    "+" + potions.size() + " potions added to your inventory!"
+            Potion last = potions.isEmpty() ? null : potions.get(potions.size() - 1);
+            handlePullTenResult(potions, () ->
+                            window.gachaPanel.showPotionResult(last.getPotionImage(), last.getPotionName(), "Potion", last.getRarity().name(), "+" + potions.size() + " potions added to your inventory!"),
+                    this::refreshInventory
             );
-
-            window.gachaPanel.applyCanAfford(state.currency);
-            refreshOverlay();
-            refreshInventory();
         });
     }
 
@@ -185,13 +145,11 @@ public class GameController {
                 "🥚"
         );
         window.petView.updateStats(
-                scaledPetStatusBar(pet.getFullnessStat()),
-                scaledPetStatusBar(pet.getHappinessStat()),
-                scaledPetStatusBar(pet.getEnergyStat()),
-                scaledPetStatusBar(pet.getHygieneStat())
+                scaledPetStatusBar(pet.getFullnessStat(), pet),
+                scaledPetStatusBar(pet.getHappinessStat(), pet),
+                scaledPetStatusBar(pet.getEnergyStat(), pet),
+                scaledPetStatusBar(pet.getHygieneStat(), pet)
         );
-        // TODO: LEVEL?
-        // window.petView.updateLevel(pet.getAge(), 0);
         window.petView.updateStateLabel(currentMoodEmoji(pet));
     }
 
@@ -271,13 +229,13 @@ public class GameController {
                 .findFirst().orElse(null);
     }
 
-    private int scaledPetStatusBar(int raw) {
-        return (int) ((raw / (float) Pet.getMaxStat()) * 100); // TODO: need to scale off of individual concrete pets cus they have changing strategies, therefore changing max_stats
+    private int scaledPetStatusBar(int raw, Pet pet) {
+        return (int) ((raw / (float) pet.getMaxStat()) * 100);
     }
 
     // TODO: replace later
     private String currentMoodEmoji(Pet pet) {
-        if (pet.getHappinessStat() >= Pet.getMaxStat()) return "😊 Happy";
+        if (pet.getHappinessStat() >= Pet.getMinimumStat()) return "😊 Happy";
         if (pet.getEnergyStat() <= Pet.getMinimumStat()) return "😴 Tired";
         if (pet.getFullnessStat() <= Pet.getMinimumStat()) return "🍖 Hungry";
         if (pet.getHygieneStat() <= Pet.getMinimumStat()) return "🛁 Dirty";
