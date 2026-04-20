@@ -84,7 +84,7 @@ public class GameController {
 
     private void wireGacha() {
         window.gachaPanel.setPetRollOneAction(event -> {
-            Pet pet = (Pet) petGacha.pullOne();
+            Pet pet = petGacha.pullOne(); // no cast
             handlePullOneResult(pet, () ->
                             window.gachaPanel.showPetResult("🥚", pet.getName(), pet.getSpecies(), pet.getRarity().name(), null),
                     this::refreshCollection
@@ -92,30 +92,25 @@ public class GameController {
         });
 
         window.gachaPanel.setPetRollTenAction(event -> {
-            List<Pet> pets = (List<Pet>) petGacha.pullTen();
+            List<Pet> pets = petGacha.pullTen();
             Pet last = pets.isEmpty() ? null : pets.get(pets.size() - 1);
-            handlePullTenResult(pets, () ->
-                            window.gachaPanel.showPetResult("🥚", last.getName(), last.getSpecies(), last.getRarity().name(),
-                                    "+" + pets.size() + " pets added to your collection!"),
+            handlePullTenResult(pets, () -> window.gachaPanel.showPetResult("🥚", last.getName(), last.getSpecies(), last.getRarity().name(), "+" + pets.size() + " pets added to your collection!"),
                     this::refreshCollection
             );
         });
 
         window.gachaPanel.setPotionRollOneAction(event -> {
-            Potion potion = (Potion) potionGacha.pullOne();
-            handlePullOneResult(potion, () ->
-                            window.gachaPanel.showPotionResult(potion.getPotionImage(), potion.getPotionName(), "Potion",
-                                    potion.getRarity().name(), potion.getDescription()),
+            Potion potion = potionGacha.pullOne();
+            handlePullOneResult(potion, () -> window.gachaPanel.showPotionResult(potion.getPotionImage(), potion.getPotionName(), "Potion", potion.getRarity().name(), potion.getDescription()),
                     this::refreshInventory
             );
         });
 
         window.gachaPanel.setPotionRollTenAction(event -> {
-            List<Potion> potions = (List<Potion>) potionGacha.pullTen();
+            List<Potion> potions = potionGacha.pullTen();
             Potion last = potions.isEmpty() ? null : potions.get(potions.size() - 1);
             handlePullTenResult(potions, () ->
-                            window.gachaPanel.showPotionResult(last.getPotionImage(), last.getPotionName(), "Potion",
-                                    last.getRarity().name(), "+" + potions.size() + " potions added to your inventory!"),
+                            window.gachaPanel.showPotionResult(last.getPotionImage(), last.getPotionName(), "Potion", last.getRarity().name(), "+" + potions.size() + " potions added to your inventory!"),
                     this::refreshInventory
             );
         });

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public abstract class GachaMachine {
+public abstract class GachaMachine<T> {
 
     private static final int COST_ONE_PULL = 100;
     private static final int COST_TEN_PULL = 950;
@@ -23,24 +23,24 @@ public abstract class GachaMachine {
         this.gameState = gameState;
     }
 
-    public final Object pullOne() {
+    public final T pullOne() {
         if (!canAffordOnePull()) return null;
         chargeOnePull();
         return executePull(determineGachaRarity());
     }
 
-    public final List<?> pullTen() {
+    public final List<T> pullTen() {
         if (!canAffordTenPull()) return List.of();
         chargeTenPull();
 
-        List<Object> results = new ArrayList<>();
+        List<T> results = new ArrayList<>();
         for (int i = 0; i < TEN_PULL_COUNT; i++) {
             results.add(executePull(determineGachaRarity()));
         }
         return results;
     }
 
-    protected abstract Object executePull(GachaRarity rarity);
+    protected abstract T executePull(GachaRarity rarity);
 
     public GachaRarity determineGachaRarity() {
         int roll = random.nextInt(RARITY_ROLL_BOUND);

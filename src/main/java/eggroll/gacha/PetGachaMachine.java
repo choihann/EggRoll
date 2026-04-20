@@ -4,7 +4,7 @@ import eggroll.gamepersistence.EggRoll;
 import eggroll.pet.Pet;
 import eggroll.pet.petfactory.PetFactory;
 
-public class PetGachaMachine extends GachaMachine {
+public class PetGachaMachine extends GachaMachine<Pet> {
 
     private final PetFactory petFactory;
 
@@ -14,7 +14,7 @@ public class PetGachaMachine extends GachaMachine {
     }
 
     @Override
-    protected Object executePull(GachaRarity rarity) {
+    protected Pet executePull(GachaRarity rarity) {
         Pet pet = petFactory.createPet(rarity);
         gameState.ownedPets.add(pet);
         return pet;
