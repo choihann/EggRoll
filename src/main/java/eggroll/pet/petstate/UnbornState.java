@@ -1,17 +1,12 @@
 package eggroll.pet.petstate;
 
-import eggroll.pet.Pet;
 import eggroll.pet.PetStatType;
 
 import java.util.EnumSet;
-import java.util.Set;
 
 public class UnbornState extends PetState {
     // Can only be played with. Other stats don't go down while in this state.
-    private final EnumSet<PetStatType> penalizableStatTypes;
-
-    public UnbornState(Pet pet) {
-        super(pet);
+    public UnbornState() {
         this.penalizableStatTypes = EnumSet.noneOf(PetStatType.class); // Empty petStatType set.
     }
 

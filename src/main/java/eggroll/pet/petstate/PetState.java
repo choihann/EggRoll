@@ -1,6 +1,5 @@
 package eggroll.pet.petstate;
 
-import eggroll.pet.Pet;
 import eggroll.pet.PetStatType;
 
 import java.util.EnumSet;
@@ -8,10 +7,8 @@ import java.util.Set;
 
 abstract public class PetState implements IPetState{
     protected EnumSet<PetStatType> penalizableStatTypes;
-    protected final Pet pet;
 
-    public PetState(Pet pet) {
-        this.pet = pet;
+    public PetState() {
         this.penalizableStatTypes =  EnumSet.allOf(PetStatType.class);
     }
     public Set<PetStatType> getPenalizableStats(){

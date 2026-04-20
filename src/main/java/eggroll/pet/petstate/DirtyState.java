@@ -1,14 +1,12 @@
 package eggroll.pet.petstate;
 
-import eggroll.pet.Pet;
 import eggroll.pet.PetStatType;
 
 import java.util.EnumSet;
 
 public class DirtyState extends PetState {
 
-    public DirtyState(Pet pet) {
-        super(pet);
+    public DirtyState() {
         this.penalizableStatTypes = EnumSet.of(PetStatType.ENERGY, PetStatType.FULLNESS, PetStatType.HAPPINESS); // Empty petStatType set.
     }
 
