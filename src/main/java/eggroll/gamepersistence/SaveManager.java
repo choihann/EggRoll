@@ -7,6 +7,7 @@ import eggroll.pet.Cat;
 import eggroll.pet.Dog;
 import eggroll.pet.Pet;
 import eggroll.potion.Potion;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,41 +15,51 @@ import java.nio.file.Path;
 
 
 public class SaveManager {
+    static Logger logger = org.slf4j.LoggerFactory.getLogger(SaveManager.class);
 
-    public static final Path SAVE_PATH = Path.of("src", "main", "resources", "save.json");
 
+    private static final String SAVE_DIR = "src/main/resources/saves/";
     private static final Gson GSON = buildGson();
+    private final Path savePath;
 
-    public static void save(EggRoll state) {
+    public SaveManager(String saveName) {
+        this.savePath = Path.of(SAVE_DIR + saveName + ".json");
+    }
+
+    public void save(EggRoll state) {
         try {
-            Files.createDirectories(SAVE_PATH.getParent());
-            Files.writeString(SAVE_PATH, GSON.toJson(state));
+            Files.createDirectories(savePath.getParent());
+            Files.writeString(savePath, GSON.toJson(state));
         } catch (IOException ioException) {
-            System.err.println("[SaveManager] Failed to save: " + ioException.getMessage());
+            logger.error("[SaveManager] Failed to save: {}", ioException.getMessage());
         }
     }
 
-    public static EggRoll load() {
-        if (!Files.exists(SAVE_PATH)) {
-            System.out.println("[SaveManager] No save found — starting a new game.");
+    public boolean saveExists() {
+        return Files.exists(savePath);
+    }
+
+    public EggRoll load() {
+        if (!Files.exists(savePath)) {
+            logger.info("[SaveManager] No save found — starting a new game.");
             return EggRoll.newGame();
         }
         try {
-            String json = Files.readString(SAVE_PATH);
+            String json = Files.readString(savePath);
             EggRoll state = GSON.fromJson(json, EggRoll.class);
             state.ownedPets.forEach(Pet::initializeStates);
             return state;
         } catch (IOException ioException) {
-            System.err.println("[SaveManager] Failed to load: " + ioException.getMessage());
+            logger.error("[SaveManager] Failed to load: {}", ioException.getMessage());
             return EggRoll.newGame();
         }
     }
 
-    public static void deleteSave() {
+    public void deleteSave() {
         try {
-            Files.deleteIfExists(SAVE_PATH);
+            Files.deleteIfExists(savePath);
         } catch (IOException ioException) {
-            System.err.println("[SaveManager] Failed to delete save: " + ioException.getMessage());
+            logger.error("[SaveManager] Failed to delete save: {}", ioException.getMessage());
         }
     }
 

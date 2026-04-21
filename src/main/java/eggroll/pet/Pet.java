@@ -174,10 +174,6 @@ abstract public class Pet implements IPet, IPetObservable {
         this.isEgg = newEggStatus;
     }
 
-    abstract public boolean doActivity();
-    // return a bool that indicates whether the activity was "successful" or not?
-    // maybe it has some negative consequence depending on personality
-    // i.e. if a pet likes to laze around, maybe it gets extra stinky because it didn't shower.
 
     public boolean applyPenalty(boolean needsPenalty){
         if(needsPenalty){

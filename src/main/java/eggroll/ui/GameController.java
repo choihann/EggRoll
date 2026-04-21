@@ -19,12 +19,14 @@ public class GameController {
     //  wiring game logic to UI
     private final MainWindow window;
     private final EggRoll state;
+    private final SaveManager saveManager;
     private final PetGachaMachine petGacha;
     private final PotionGachaMachine potionGacha;
 
-    public GameController(MainWindow window) {
+    public GameController(MainWindow window, SaveManager saveManager) {
         this.window = window;
-        this.state = SaveManager.load();
+        this.saveManager = saveManager;
+        this.state = saveManager.load();
         // TODO: New is bad?
         this.petGacha = new PetGachaMachine(List.of(new CatFactory(), new DogFactory()), state);
         this.potionGacha = new PotionGachaMachine(new PotionFactory(), state);
@@ -57,7 +59,7 @@ public class GameController {
                     .findFirst().orElse(null);
             if (selected != null) {
                 switchActivePet(selected);
-                SaveManager.save(state);
+                saveManager.save(state);
             }
         });
     }
@@ -74,7 +76,7 @@ public class GameController {
             return;
         }
 
-        SaveManager.save(state);
+        saveManager.save(state);
         window.navBarOverlay.setNotification("");
         showResult.run();
         window.gachaPanel.applyCanAfford(state.currency);
@@ -88,7 +90,7 @@ public class GameController {
             return;
         }
 
-        SaveManager.save(state);
+        saveManager.save(state);
         window.navBarOverlay.setNotification("");
         showResult.run();
         window.gachaPanel.applyCanAfford(state.currency);
@@ -98,7 +100,7 @@ public class GameController {
 
     private void wireGacha() {
         window.gachaPanel.setPetRollOneAction(event -> {
-            Pet pet = petGacha.pullOne(); // no cast
+            Pet pet = petGacha.pullOne();
             handlePullOneResult(pet, () ->
                             window.gachaPanel.showPetResult("🥚", pet.getName(), pet.getSpecies(), pet.getRarity().name(), null),
                     this::refreshCollection
@@ -223,7 +225,7 @@ public class GameController {
 
             state.potionInventory.remove(potion);
 
-            SaveManager.save(state);
+            saveManager.save(state);
 
             refreshInventory();
             refreshPetView();

@@ -1,9 +1,13 @@
 package eggroll.ui;
 
+import eggroll.gamepersistence.SaveManager;
+import org.slf4j.Logger;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class MainWindow extends JFrame {
+    static Logger logger = org.slf4j.LoggerFactory.getLogger(MainWindow.class);
 
     private static final String CARD_PET = "pet";
     private static final String CARD_COLLECTION = "collection";
@@ -90,9 +94,32 @@ public class MainWindow extends JFrame {
     }
 
     static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            MainWindow window = new MainWindow();
-            new GameController(window).startGame();
-        });
+        if (args.length < 2) {
+            logger.info("Usage: eggroll --new|--load|--delete <savename>");
+            return;
+        }
+
+        String flag = args[0];
+        String saveName = args[1];
+        SaveManager saveManager = new SaveManager(saveName);
+
+        switch (flag) {
+            case "--delete" -> {
+                saveManager.deleteSave();
+                logger.info("Deleted save: {}", saveName);
+            }
+            case "--new" -> {
+                if (saveManager.saveExists()) {
+                    logger.warn("Save '{}' already exists. Use --load.", saveName);
+                    return;
+                }
+                new GameController(new MainWindow(), saveManager).startGame();
+            }
+            case "--load" -> {
+                MainWindow window = new MainWindow();
+                new GameController(window, saveManager).startGame();
+            }
+            default -> logger.info("Unknown flag: {}", flag);
+        }
     }
 }

@@ -14,15 +14,7 @@ public class Dog extends Pet{
         this(DEFAULT_NAME, GachaRarity.Common);
     }
 
-    // TODO: Left this untouched, but I'm not really sure what this does
-    @Override
-    public boolean doActivity() {
-        System.out.print(this.name + " chewed on some milk bones.");
-        increaseStat(STAT_INCREMENT, PetStatType.FULLNESS); // the dog's activity as a foodie is snacking.
-        increaseStat(STAT_INCREMENT, PetStatType.HAPPINESS); // and the dog's activity also makes it a little happier :)
-        return true;
-    }
-
+    // TODO: Why does dog have this penalty
     @Override
     public boolean applyPenalty(boolean needsPenalty) {
         if(needsPenalty){
