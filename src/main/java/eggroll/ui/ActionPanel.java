@@ -39,10 +39,6 @@ public class ActionPanel extends JPanel implements PetObserver {
                 return new Dimension(200, 160);
             }
 
-            @Override
-            public Dimension getPreferredSize() {
-                return new Dimension(super.getPreferredSize().width, 160);
-            }
         };
         primaryGrid.setOpaque(false);
         primaryGrid.setOpaque(false);

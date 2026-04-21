@@ -3,11 +3,14 @@ package eggroll.gamepersistence;
 import eggroll.command.Command;
 import eggroll.pet.Pet;
 import eggroll.potion.Potion;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EggRoll {
+    static Logger logger = org.slf4j.LoggerFactory.getLogger(EggRoll.class);
+
     // TODO: Change this, honestly I did this for testing
     private static final int STARTING_CURRENCY_AMOUNT = 2000;
     public static final int ACTIONS_PER_DAY = 3;
@@ -33,7 +36,7 @@ public class EggRoll {
 
     public void executeAction(Command command, Pet activePet) {
         if (actionsRemaining <= 0) {
-            System.out.println("[DayManager] No actions remaining — advance the day first.");
+            logger.info("[DayManager] No actions remaining — advance the day first.");
             return;
         }
 
@@ -43,8 +46,6 @@ public class EggRoll {
         if (actionsRemaining <= 0) {
             advanceDay(activePet);
         }
-
-        SaveManager.save(this);
     }
 
     private void advanceDay(Pet activePet) {
@@ -53,7 +54,7 @@ public class EggRoll {
         activePet.evolve();
         activePet.advanceState();
         activePet.lowerRandomStat(1, activePet.getPenalizableStats());
-        System.out.println("[DayManager] Day " + dayCount + " begins!");
+        logger.info("[DayManager] Day {} begins!", dayCount);
     }
 
 }

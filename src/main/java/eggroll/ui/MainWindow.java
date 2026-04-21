@@ -1,9 +1,13 @@
 package eggroll.ui;
 
+import eggroll.gamepersistence.SaveManager;
+import org.slf4j.Logger;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class MainWindow extends JFrame {
+    static Logger logger = org.slf4j.LoggerFactory.getLogger(MainWindow.class);
 
     private static final String CARD_PET = "pet";
     private static final String CARD_COLLECTION = "collection";
@@ -24,7 +28,7 @@ public class MainWindow extends JFrame {
         super("Egg Roll");
         UIComponents.applyGlobalDefaults();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(480, 700));
+        setMinimumSize(new Dimension(360, 600));
         setPreferredSize(new Dimension(520, 760));
         setBackground(Theme.BG_BASE);
 
@@ -35,12 +39,9 @@ public class MainWindow extends JFrame {
         gachaPanel = new GachaPanel();
         inventoryPanel = new InventoryPanel();
 
-        JSplitPane petCard = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false, petView, actionPanel);
-        petCard.setDividerLocation(0.58);
-        petCard.setResizeWeight(0.58);
-        petCard.setBorder(BorderFactory.createEmptyBorder());
-        petCard.setDividerSize(1);
-        petCard.setBackground(Theme.BG_BASE);
+        JPanel petCard = new JPanel(new BorderLayout());
+        petCard.add(petView, BorderLayout.CENTER);
+        petCard.add(actionPanel, BorderLayout.SOUTH);
 
         cardContainer.setBackground(Theme.BG_BASE);
         cardContainer.add(petCard, CARD_PET);
@@ -90,9 +91,32 @@ public class MainWindow extends JFrame {
     }
 
     static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            MainWindow window = new MainWindow();
-            new GameController(window).startGame();
-        });
+        if (args.length < 2) {
+            logger.info("Usage: eggroll --new|--load|--delete <savename>");
+            return;
+        }
+
+        String flag = args[0];
+        String saveName = args[1];
+        SaveManager saveManager = new SaveManager(saveName);
+
+        switch (flag) {
+            case "--delete" -> {
+                saveManager.deleteSave();
+                logger.info("Deleted save: {}", saveName);
+            }
+            case "--new" -> {
+                if (saveManager.saveExists()) {
+                    logger.warn("Save '{}' already exists. Use --load.", saveName);
+                    return;
+                }
+                new GameController(new MainWindow(), saveManager).startGame();
+            }
+            case "--load" -> {
+                MainWindow window = new MainWindow();
+                new GameController(window, saveManager).startGame();
+            }
+            default -> logger.info("Unknown flag: {}", flag);
+        }
     }
 }

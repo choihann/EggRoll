@@ -43,7 +43,7 @@ public class PetViewPanel extends JPanel implements PetObserver {
         spriteArea = new RoundedPanel(Theme.BG_CARD);
         spriteArea.setLayout(new BorderLayout());
         spriteArea.setBorder(BorderFactory.createEmptyBorder(Theme.PAD_LG, Theme.PAD_XL, Theme.PAD_LG, Theme.PAD_XL));
-        spriteArea.setPreferredSize(new Dimension(260, 260));
+        spriteArea.setMaximumSize(new Dimension(260, 260));
         spriteArea.add(spriteEmoji, BorderLayout.CENTER);
 
         stateLabel = new JLabel("Waiting to hatch…", SwingConstants.CENTER);
