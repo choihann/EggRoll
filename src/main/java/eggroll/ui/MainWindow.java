@@ -28,7 +28,7 @@ public class MainWindow extends JFrame {
         super("Egg Roll");
         UIComponents.applyGlobalDefaults();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(480, 700));
+        setMinimumSize(new Dimension(360, 600));
         setPreferredSize(new Dimension(520, 760));
         setBackground(Theme.BG_BASE);
 
@@ -39,12 +39,9 @@ public class MainWindow extends JFrame {
         gachaPanel = new GachaPanel();
         inventoryPanel = new InventoryPanel();
 
-        JSplitPane petCard = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false, petView, actionPanel);
-        petCard.setDividerLocation(0.58);
-        petCard.setResizeWeight(0.58);
-        petCard.setBorder(BorderFactory.createEmptyBorder());
-        petCard.setDividerSize(1);
-        petCard.setBackground(Theme.BG_BASE);
+        JPanel petCard = new JPanel(new BorderLayout());
+        petCard.add(petView, BorderLayout.CENTER);
+        petCard.add(actionPanel, BorderLayout.SOUTH);
 
         cardContainer.setBackground(Theme.BG_BASE);
         cardContainer.add(petCard, CARD_PET);
