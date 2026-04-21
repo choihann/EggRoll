@@ -15,7 +15,7 @@ public class EggRoll {
     public List<Pet> ownedPets = new ArrayList<>();
     public List<Potion> potionInventory = new ArrayList<>();
 
-    public String activePetName;
+    public String activePetId;
 
     public int currency;
 

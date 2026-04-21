@@ -7,6 +7,7 @@ import eggroll.gamepersistence.EggRoll;
 import eggroll.gamepersistence.SaveManager;
 import eggroll.pet.Pet;
 import eggroll.pet.petfactory.CatFactory;
+import eggroll.pet.petfactory.DogFactory;
 import eggroll.potion.Potion;
 import eggroll.potion.PotionFactory;
 
@@ -25,14 +26,15 @@ public class GameController {
         this.window = window;
         this.state = SaveManager.load();
         // TODO: New is bad?
-        this.petGacha = new PetGachaMachine(new CatFactory(), state);
+        this.petGacha = new PetGachaMachine(List.of(new CatFactory(), new DogFactory()), state);
         this.potionGacha = new PotionGachaMachine(new PotionFactory(), state);
 
         wireActions();
         wireGacha();
+        wireCollection();
         refreshAll();
         if (activePet() != null) {
-            attachObservers(activePet());
+            switchActivePet(activePet());
         }
     }
 
@@ -46,6 +48,18 @@ public class GameController {
         window.actionPanel.setNapAction(napPet -> runCommand(new NapCommand(activePet())));
         window.actionPanel.setBatheAction(bathePet -> runCommand(new BatheCommand(activePet())));
 
+    }
+
+    private void wireCollection() {
+        window.collectionPanel.setSelectListener(petName -> {
+            Pet selected = state.ownedPets.stream()
+                    .filter(pet -> petName.equals(pet.getId()))
+                    .findFirst().orElse(null);
+            if (selected != null) {
+                switchActivePet(selected);
+                SaveManager.save(state);
+            }
+        });
     }
 
     private void runCommand(Command command) {
@@ -140,7 +154,7 @@ public class GameController {
         window.petView.updatePetIdentity(
                 pet.getName(),
                 pet.getSpecies(),
-                "egg",
+                pet.getEvolutionStage().name(),
                 pet.getRarity().name(),
                 "🥚"
         );
@@ -158,22 +172,15 @@ public class GameController {
         if (state.ownedPets == null) return;
         List<CollectionPanel.PetCardData> cards = state.ownedPets.stream()
                 .map(pet -> new CollectionPanel.PetCardData(
-                        pet.getName(),
+                        pet.getId(),
                         pet.getName(),
                         pet.getSpecies(),
-                        "Baby",
+                        pet.getEvolutionStage().name(),
                         pet.getRarity().name(),
                         "🥚",
-                        pet.getName().equals(state.activePetName)
+                        pet.getId().equals(state.activePetId)
                 )).toList();
         window.collectionPanel.refreshCollection(cards);
-
-        window.collectionPanel.setSelectListener(petName -> {
-            state.activePetName = petName;
-            attachObservers(activePet());
-            SaveManager.save(state);
-            refreshAll();
-        });
     }
 
     private void refreshInventory() {
@@ -224,9 +231,9 @@ public class GameController {
     }
 
     private Pet activePet() {
-        if (state.ownedPets == null || state.activePetName == null) return null;
+        if (state.ownedPets == null || state.activePetId == null) return null;
         return state.ownedPets.stream()
-                .filter(pet -> state.activePetName.equals(pet.getName()))
+                .filter(pet -> state.activePetId.equals(pet.getId()))
                 .findFirst().orElse(null);
     }
 
@@ -243,9 +250,16 @@ public class GameController {
         return "😊 Content";
     }
 
-    private void attachObservers(Pet pet) {
-        pet.addObserver(window.petView);
-        pet.addObserver(window.actionPanel);
+    private void switchActivePet(Pet newPet) {
+        Pet previousPet = activePet();
+        if (previousPet != null) {
+            previousPet.removeObserver(window.petView);
+            previousPet.removeObserver(window.actionPanel);
+        }
+        state.activePetId = newPet.getId();
+        newPet.addObserver(window.petView);
+        newPet.addObserver(window.actionPanel);
+        refreshAll();
     }
 
 }

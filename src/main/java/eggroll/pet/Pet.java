@@ -10,10 +10,7 @@ import eggroll.pet.petevolutionstrategy.StrategyFactory;
 import eggroll.pet.petstate.PetState;
 import eggroll.pet.petstate.StateFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 abstract public class Pet implements IPet, IPetObservable {
     protected final static int STARTING_STAT = 3;
@@ -25,6 +22,8 @@ abstract public class Pet implements IPet, IPetObservable {
     public static int getStartingStat() {
         return STARTING_STAT;
     }
+
+    private String id = UUID.randomUUID().toString();
 
     public static int getMinimumStat() {
         return MINIMUM_STAT;
@@ -104,6 +103,10 @@ abstract public class Pet implements IPet, IPetObservable {
     }
     public PetState getPetState(){
         return this.currentState;
+    }
+
+    public String getId() {
+        return this.id;
     }
 
     public GachaRarity getRarity() {
@@ -335,8 +338,7 @@ abstract public class Pet implements IPet, IPetObservable {
         return true;
     }
 
-    // TODO: Ask about whether there's a better way to go about this for game persistence
-    public void initializeTransientsForPet() {
+    public void initializeStates() {
         unbornState = stateFactory.newUnbornState();
         normalState = stateFactory.newNormalState();
         dirtyState = stateFactory.newDirtyState();
@@ -367,10 +369,7 @@ abstract public class Pet implements IPet, IPetObservable {
         }
     }
 
-    // TODO: Should notify be public? It was private, but then I implemented IPetObservable, so I couldn't keep it private
-    // TODO: So I was considering whether or not I should remove it from IPetObservable to keep it private on pet
-    // TODO: after all, observers shouldn't be triggered externally
-    public void notifyObservers(PetEvent event) {
+    private void notifyObservers(PetEvent event) {
         if (petObservers == null) {
             return;
         }
