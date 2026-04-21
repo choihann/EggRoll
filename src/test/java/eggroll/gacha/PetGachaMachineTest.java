@@ -3,6 +3,7 @@ package eggroll.gacha;
 import eggroll.gamepersistence.EggRoll;
 import eggroll.pet.Pet;
 import eggroll.pet.petfactory.CatFactory;
+import eggroll.pet.petfactory.DogFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +19,7 @@ public class PetGachaMachineTest {
     @BeforeEach
     void setUp() {
         gameState = EggRoll.newGame();
-        gachaMachine = new PetGachaMachine(new CatFactory(), gameState);
+        gachaMachine = new PetGachaMachine(List.of(new CatFactory(), new DogFactory()), gameState);
     }
 
     @Test
