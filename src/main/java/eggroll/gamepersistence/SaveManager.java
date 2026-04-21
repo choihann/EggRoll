@@ -35,7 +35,7 @@ public class SaveManager {
         try {
             String json = Files.readString(SAVE_PATH);
             EggRoll state = GSON.fromJson(json, EggRoll.class);
-            state.ownedPets.forEach(Pet::initializeTransientsForPet);
+            state.ownedPets.forEach(Pet::initializeStates);
             return state;
         } catch (IOException ioException) {
             System.err.println("[SaveManager] Failed to load: " + ioException.getMessage());

@@ -335,8 +335,7 @@ abstract public class Pet implements IPet, IPetObservable {
         return true;
     }
 
-    // TODO: Ask about whether there's a better way to go about this for game persistence
-    public void initializeTransientsForPet() {
+    public void initializeStates() {
         unbornState = stateFactory.newUnbornState();
         normalState = stateFactory.newNormalState();
         dirtyState = stateFactory.newDirtyState();
@@ -367,10 +366,7 @@ abstract public class Pet implements IPet, IPetObservable {
         }
     }
 
-    // TODO: Should notify be public? It was private, but then I implemented IPetObservable, so I couldn't keep it private
-    // TODO: So I was considering whether or not I should remove it from IPetObservable to keep it private on pet
-    // TODO: after all, observers shouldn't be triggered externally
-    public void notifyObservers(PetEvent event) {
+    private void notifyObservers(PetEvent event) {
         if (petObservers == null) {
             return;
         }
