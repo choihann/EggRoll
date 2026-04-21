@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 import eggroll.pet.Cat;
+import eggroll.pet.Dog;
 import eggroll.pet.Pet;
 import eggroll.potion.Potion;
 
@@ -53,9 +54,8 @@ public class SaveManager {
 
     private static Gson buildGson() {
         RuntimeTypeAdapterFactory<Pet> petAdapter = RuntimeTypeAdapterFactory.of(Pet.class, "type")
-                .registerSubtype(Cat.class, "Cat");
-        // TODO: for new types
-        // .registerSubtype(Dog.class, "Dog") or whatever we decide on new stuff to be
+                .registerSubtype(Cat.class, "Cat")
+                .registerSubtype(Dog.class, "Dog");
 
         RuntimeTypeAdapterFactory<Potion> potionAdapter =
                 RuntimeTypeAdapterFactory.of(Potion.class, "type")

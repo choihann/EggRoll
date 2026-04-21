@@ -10,10 +10,7 @@ import eggroll.pet.petevolutionstrategy.StrategyFactory;
 import eggroll.pet.petstate.PetState;
 import eggroll.pet.petstate.StateFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 abstract public class Pet implements IPet, IPetObservable {
     protected final static int STARTING_STAT = 3;
@@ -25,6 +22,8 @@ abstract public class Pet implements IPet, IPetObservable {
     public static int getStartingStat() {
         return STARTING_STAT;
     }
+
+    private String id = UUID.randomUUID().toString();
 
     public static int getMinimumStat() {
         return MINIMUM_STAT;
@@ -104,6 +103,10 @@ abstract public class Pet implements IPet, IPetObservable {
     }
     public PetState getPetState(){
         return this.currentState;
+    }
+
+    public String getId() {
+        return this.id;
     }
 
     public GachaRarity getRarity() {
