@@ -34,7 +34,7 @@ public class GameController {
         wireCollection();
         refreshAll();
         if (activePet() != null) {
-            setActivePet(activePet());
+            switchActivePet(activePet());
         }
     }
 
@@ -56,7 +56,7 @@ public class GameController {
                     .filter(pet -> petName.equals(pet.getId()))
                     .findFirst().orElse(null);
             if (selected != null) {
-                setActivePet(selected);
+                switchActivePet(selected);
                 SaveManager.save(state);
             }
         });
@@ -250,7 +250,7 @@ public class GameController {
         return "😊 Content";
     }
 
-    private void setActivePet(Pet newPet) {
+    private void switchActivePet(Pet newPet) {
         Pet previousPet = activePet();
         if (previousPet != null) {
             previousPet.removeObserver(window.petView);
