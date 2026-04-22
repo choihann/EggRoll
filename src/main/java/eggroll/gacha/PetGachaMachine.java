@@ -20,7 +20,7 @@ public class PetGachaMachine extends GachaMachine<Pet> {
     protected Pet executePull(GachaRarity rarity) {
         PetFactory factory = factories.get(random.nextInt(factories.size()));
         Pet pet = factory.createPet(rarity);
-        gameState.ownedPets.add(pet);
+        gameState.ownedPets.add(pet); // TODO: Rename instances of gameState to eggroll?
         return pet;
     }
 }

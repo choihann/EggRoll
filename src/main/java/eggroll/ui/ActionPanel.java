@@ -3,10 +3,7 @@ package eggroll.ui;
 import eggroll.observer.PetEvent;
 import eggroll.observer.PetObserver;
 import eggroll.pet.Pet;
-import eggroll.pet.petstate.HungryState;
-import eggroll.pet.petstate.PetState;
-import eggroll.pet.petstate.TiredState;
-import eggroll.pet.petstate.UnbornState;
+import eggroll.pet.petstate.*;
 import eggroll.ui.UIComponents.buttonStyle;
 
 import javax.swing.*;
@@ -47,7 +44,7 @@ public class ActionPanel extends JPanel implements PetObserver {
         feedBtn = buildActionButton("🍖  Feed", Theme.ACCENT_TERRA, "Feed your pet to restore hunger.");
         playBtn = buildActionButton("🎾  Play", Theme.ACCENT_SAGE, "Play with your pet to boost happiness.");
         restBtn = buildActionButton("🌙  Rest", Theme.ACCENT_PERIWINKLE, "Put your pet to sleep to restore energy.");
-        batheBtn = buildActionButton("🛁  Bathe", Theme.ACCENT_ROSE, "Give your pet a bath for a happiness boost.");
+        batheBtn = buildActionButton("🛁  Bathe", Theme.ACCENT_ROSE, "Give your pet a bath to be less dirty.");
 
         primaryGrid.add(feedBtn);
         primaryGrid.add(playBtn);
@@ -103,18 +100,22 @@ public class ActionPanel extends JPanel implements PetObserver {
         setAllEnabled(true);
         switch (state) {
             case TiredState tiredState -> {
-                feedBtn.setEnabled(false);
-                playBtn.setEnabled(false);
+                setAllEnabled(false);
+                restBtn.setEnabled(true);
                 showFeedback("Your pet is resting…");
             }
             case UnbornState unbornState -> {
                 setAllEnabled(false);
-                feedBtn.setEnabled(true);
+                playBtn.setEnabled(true);
                 showFeedback("It will hatch soon!");
             }
-            case HungryState hungrystate -> {
-                playBtn.setEnabled(false);
+            case HungryState hungryState -> {
+                feedBtn.setEnabled(false);
                 showFeedback("Your pet is hungry!");
+            }
+            case DirtyState dirtyState -> {
+                setAllEnabled(false);
+                batheBtn.setEnabled(true);
             }
             default -> showFeedback("");
         }

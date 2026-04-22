@@ -14,13 +14,4 @@ public class Dog extends Pet{
         this(DEFAULT_NAME, GachaRarity.Common);
     }
 
-    // TODO: Why does dog have this penalty
-    @Override
-    public boolean applyPenalty(boolean needsPenalty) {
-        if(needsPenalty){
-            happiness =- 1;
-            return true;
-        }
-        return false;
-    }
 }

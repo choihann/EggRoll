@@ -86,10 +86,19 @@ abstract public class Pet implements IPet, IPetObservable {
         this.species = "NULL";
         this.rarity = rarity;
 
+        this.unbornState = stateFactory.newUnbornState();
+        this.normalState = stateFactory.newNormalState();
+        this.dirtyState = stateFactory.newDirtyState();
+        this.tiredState = stateFactory.newTiredState();
+        this.hungryState = stateFactory.newHungryState();
+
         this.hygiene = STARTING_STAT;
         this.happiness = STARTING_STAT;
         this.fullness = STARTING_STAT;
         this.energy = STARTING_STAT;
+
+        this.currentState = unbornState;
+        this.currentEvolutionStrategy = strategyFactory.newUnbornStrategy();
 
         this.needsPenalty = false;
         this.isEgg = true;
