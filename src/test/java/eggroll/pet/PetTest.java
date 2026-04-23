@@ -20,7 +20,7 @@ public class PetTest {
     }
 
     @Test
-    void testIsEgg() {
+    void testOnConstructionPetsAreEggs() {
         assertTrue(animalPet.isEgg);
     }
 
@@ -81,5 +81,103 @@ public class PetTest {
         Set<PetStatType> thePenalizableStats = animalPet.getPenalizableStats();
 
         assertFalse(thePenalizableStats.contains(PetStatType.FULLNESS));
+        assertTrue(animalPet.currentState.canEat());
+        assertFalse(animalPet.currentState.canBathe());
+        assertFalse(animalPet.currentState.canPlay());
+        assertFalse(animalPet.currentState.canNap());
+    }
+
+    @Test
+    void testPetInDirtyStateReturnsProperCommandPermissions(){
+        EvolutionStrategy juvenileEvo = animalPet.strategyFactory.newJuvenileStrategy();
+        animalPet.setCurrentStrategy(juvenileEvo);
+        animalPet.setCurrentState(animalPet.getDirtyState());
+        Set<PetStatType> thePenalizableStats = animalPet.getPenalizableStats();
+
+        assertFalse(thePenalizableStats.contains(PetStatType.HYGIENE));
+        assertTrue(animalPet.currentState.canBathe());
+        assertFalse(animalPet.currentState.canEat());
+        assertFalse(animalPet.currentState.canPlay());
+        assertFalse(animalPet.currentState.canNap());
+    }
+
+    @Test
+    void testPetInNormalStateReturnsProperCommandPermissions(){
+        EvolutionStrategy juvenileEvo = animalPet.strategyFactory.newJuvenileStrategy();
+        animalPet.setCurrentStrategy(juvenileEvo);
+        animalPet.setCurrentState(animalPet.getNormalState());
+        Set<PetStatType> thePenalizableStats = animalPet.getPenalizableStats();
+
+        assertTrue(thePenalizableStats.contains(PetStatType.FULLNESS));
+        assertTrue(thePenalizableStats.contains(PetStatType.ENERGY));
+        assertTrue(thePenalizableStats.contains(PetStatType.HYGIENE));
+        assertTrue(thePenalizableStats.contains(PetStatType.HAPPINESS));
+
+        assertTrue(animalPet.currentState.canBathe());
+        assertTrue(animalPet.currentState.canEat());
+        assertTrue(animalPet.currentState.canPlay());
+        assertTrue(animalPet.currentState.canNap());
+    }
+
+    @Test
+    void testPetInTiredStateReturnsProperCommandPermissions(){
+        EvolutionStrategy juvenileEvo = animalPet.strategyFactory.newJuvenileStrategy();
+        animalPet.setCurrentStrategy(juvenileEvo);
+        animalPet.setCurrentState(animalPet.getTiredState());
+        Set<PetStatType> thePenalizableStats = animalPet.getPenalizableStats();
+
+        assertFalse(thePenalizableStats.contains(PetStatType.ENERGY));
+        assertTrue(animalPet.currentState.canNap());
+        assertFalse(animalPet.currentState.canEat());
+        assertFalse(animalPet.currentState.canPlay());
+        assertFalse(animalPet.currentState.canBathe());
+    }
+
+    @Test
+    void testPetInUnbornStateReturnsProperCommandPermissions(){
+        EvolutionStrategy unbornEvo = animalPet.strategyFactory.newUnbornStrategy();
+        animalPet.setCurrentStrategy(unbornEvo);
+        animalPet.setCurrentState(animalPet.getUnbornState());
+        Set<PetStatType> thePenalizableStats = animalPet.getPenalizableStats();
+
+        assertFalse(thePenalizableStats.contains(PetStatType.FULLNESS));
+        assertFalse(thePenalizableStats.contains(PetStatType.ENERGY));
+        assertFalse(thePenalizableStats.contains(PetStatType.HYGIENE));
+        assertFalse(thePenalizableStats.contains(PetStatType.HAPPINESS));
+
+        assertFalse(animalPet.currentState.canBathe());
+        assertFalse(animalPet.currentState.canEat());
+        assertTrue(animalPet.currentState.canPlay());
+        assertFalse(animalPet.currentState.canNap());
+    }
+
+    @Test
+    void testAdultPetsCannotEvolve(){
+        EvolutionStrategy adultEvo = animalPet.strategyFactory.newAdultStrategy();
+        animalPet.setCurrentStrategy(adultEvo);
+        animalPet.setCurrentState(animalPet.getNormalState());
+
+        assertFalse(animalPet.canEvolve());
+    }
+
+    @Test
+    void testJuvenilePetsCanEvolveWhenHappinessMax(){
+        EvolutionStrategy juvenileEvo = animalPet.strategyFactory.newJuvenileStrategy();
+        animalPet.setCurrentStrategy(juvenileEvo);
+        animalPet.setCurrentState(animalPet.getNormalState());
+        animalPet.setStat(7, PetStatType.HAPPINESS);
+
+        assertTrue(animalPet.canEvolve());
+    }
+
+    @Test
+    void testJuvenilePetsCannotEvolveWhenHappinessNotMax(){
+        EvolutionStrategy juvenileEvo = animalPet.strategyFactory.newJuvenileStrategy();
+        animalPet.setCurrentStrategy(juvenileEvo);
+        animalPet.setCurrentState(animalPet.getNormalState());
+
+        assertFalse(animalPet.canEvolve());
     }
 }
+
+
