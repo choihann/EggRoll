@@ -115,4 +115,20 @@ public class EggRollTest {
         assertEquals(3, commandRunCount[0]);
         assertEquals(2, game.dayCount);
     }
+
+    @Test
+    void testAdvanceDayGrantsCurrencyWhenPetIsInNormalState() {
+        activePet.setIsEgg(false);
+        activePet.setCurrentState(activePet.getNormalState());
+
+        int initialCurrency = game.currency;
+
+        Command command = () -> {};
+
+        game.executeAction(command, activePet);
+        game.executeAction(command, activePet);
+        game.executeAction(command, activePet);
+
+        assertEquals(initialCurrency + 50, game.currency);
+    }
 }
