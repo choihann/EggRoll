@@ -1,5 +1,6 @@
 package eggroll.ui;
 
+import eggroll.gacha.GachaRarity;
 import eggroll.ui.UIComponents.RoundedPanel;
 import eggroll.ui.UIComponents.buttonStyle;
 
@@ -67,11 +68,11 @@ public class GachaPanel extends JPanel {
 
 
         // this is meant to be the result card
-        // TODO: test this once we have implementation for the gacha system
-        petEmoji = centred("", new Font("Serif", Font.PLAIN, 72), Theme.TEXT_PRIMARY);
+        petEmoji = new JLabel("", SwingConstants.CENTER);
+        petEmoji.setAlignmentX(CENTER_ALIGNMENT);
         petName = centred("???", Theme.FONT_PET_NAME, Theme.TEXT_PRIMARY);
         petSpecies = centred("", Theme.FONT_BODY, Theme.TEXT_SECONDARY);
-        petRarity = UIComponents.rarityLabel("Common");
+        petRarity = UIComponents.rarityLabel(GachaRarity.Common);
         petRarity.setAlignmentX(CENTER_ALIGNMENT);
         petFlavorText = centred("", new Font("Serif", Font.ITALIC, 13), Theme.TEXT_MUTED);
 
@@ -100,7 +101,7 @@ public class GachaPanel extends JPanel {
         potionEmoji = centred("", new Font("Serif", Font.PLAIN, 72), Theme.TEXT_PRIMARY);
         potionName = centred("???", Theme.FONT_PET_NAME, Theme.TEXT_PRIMARY);
         potionEffect = centred("", Theme.FONT_BODY, Theme.TEXT_SECONDARY);
-        potionRarity = UIComponents.rarityLabel("Common");
+        potionRarity = UIComponents.rarityLabel(GachaRarity.Common);
         potionRarity.setAlignmentX(CENTER_ALIGNMENT);
         potionFlavorText = centred("", new Font("Serif", Font.ITALIC, 13), Theme.TEXT_MUTED);
 
@@ -167,11 +168,18 @@ public class GachaPanel extends JPanel {
 
 
     public void showPetResult(String emoji, String name, String species, String rarity, String flavorText) {
-        petEmoji.setText(emoji);
+        ImageIcon petIcon = ImageUtils.loadPetImage(species, 96);
+        if (petIcon != null) {
+            petEmoji.setIcon(petIcon);
+            petEmoji.setText(null);
+        } else {
+            petEmoji.setIcon(null);
+            petEmoji.setText(emoji);
+        }
         petName.setText(name);
         petSpecies.setText(species);
         petRarity.setText("- " + rarity);
-        petRarity.setForeground(Theme.rarityColour(rarity));
+        petRarity.setForeground(Theme.rarityColor(GachaRarity.Common));
 
         petFlavorText.setText(flavorText != null ? "\"" + flavorText + "\"" : "");
 
@@ -187,7 +195,7 @@ public class GachaPanel extends JPanel {
         potionName.setText(name);
         potionEffect.setText(effect != null ? "\"" + effect + "\"" : "");
         potionRarity.setText("- " + rarity);
-        potionRarity.setForeground(Theme.rarityColour(rarity));
+        potionRarity.setForeground(Theme.rarityColor(GachaRarity.Common));
         potionFlavorText.setText(flavorText != null ? "\"" + flavorText + "\"" : "");
 
 
