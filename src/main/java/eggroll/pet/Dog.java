@@ -10,8 +10,4 @@ public class Dog extends Pet{
         super(name, SPECIES, rarity);
     }
 
-    public Dog() {
-        this(DEFAULT_NAME, GachaRarity.Common);
-    }
-
 }
