@@ -110,7 +110,8 @@ public class ActionPanel extends JPanel implements PetObserver {
                 showFeedback("It will hatch soon!");
             }
             case HungryState hungryState -> {
-                feedBtn.setEnabled(false);
+                setAllEnabled(false);
+                feedBtn.setEnabled(true);
                 showFeedback("Your pet is hungry!");
             }
             case DirtyState dirtyState -> {
