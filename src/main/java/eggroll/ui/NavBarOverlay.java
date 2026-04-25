@@ -93,9 +93,6 @@ public class NavBarOverlay {
         }
     }
 
-    public void setNotification(String message) {
-        notificationLabel.setText(message == null ? "" : " Warning " + message);
-    }
 
     // navbar refresh
 

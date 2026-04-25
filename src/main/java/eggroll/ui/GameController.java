@@ -27,7 +27,6 @@ public class GameController {
         this.window = window;
         this.saveManager = saveManager;
         this.state = saveManager.load();
-        // TODO: New is bad?
         this.petGacha = new PetGachaMachine(List.of(new CatFactory(), new DogFactory()), state);
         this.potionGacha = new PotionGachaMachine(new PotionFactory(), state);
 
@@ -72,12 +71,10 @@ public class GameController {
 
     private <T> void handlePullOneResult(T result, Runnable showResult, Runnable refresh) {
         if (result == null) {
-            window.navBarOverlay.setNotification("Not enough coins!");
             return;
         }
 
         saveManager.save(state);
-        window.navBarOverlay.setNotification("");
         showResult.run();
         window.gachaPanel.applyCanAfford(state.currency);
         refreshOverlay();
@@ -86,12 +83,10 @@ public class GameController {
 
     private <T> void handlePullTenResult(List<T> results, Runnable showResult, Runnable refresh) {
         if (results.isEmpty()) {
-            window.navBarOverlay.setNotification("Not enough coins!");
             return;
         }
 
         saveManager.save(state);
-        window.navBarOverlay.setNotification("");
         showResult.run();
         window.gachaPanel.applyCanAfford(state.currency);
         refreshOverlay();
@@ -144,7 +139,7 @@ public class GameController {
         window.navBarOverlay.refreshCoins(state.currency);
         Pet pet = activePet();
         if (pet != null) {
-            window.navBarOverlay.refreshActivePet(pet.getName(), null);
+            window.navBarOverlay.refreshActivePet(pet.getName(), "EggRoll");
         } else {
             window.navBarOverlay.refreshActivePet(null, null);
         }
