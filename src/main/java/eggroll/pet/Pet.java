@@ -9,6 +9,7 @@ import eggroll.pet.petevolutionstrategy.EvolutionStrategy;
 import eggroll.pet.petevolutionstrategy.StrategyFactory;
 import eggroll.pet.petstate.PetState;
 import eggroll.pet.petstate.StateFactory;
+import java.util.HashSet;
 
 import java.util.*;
 
@@ -16,24 +17,16 @@ abstract public class Pet implements IPet, IPetObservable {
     protected final static int STARTING_STAT = 3;
     protected final static int MINIMUM_STAT = 2;
     protected final static int STAT_INCREMENT = 1;
-    protected final static int STAT_DECREMENT = 1;
     private transient List<PetObserver> petObservers = new ArrayList<>();
 
-    public static int getStartingStat() {
-        return STARTING_STAT;
-    }
+
 
     private String id = UUID.randomUUID().toString();
-
-    public static int getMinimumStat() {
-        return MINIMUM_STAT;
-    }
 
     protected transient PetState unbornState;
     protected transient PetState normalState;
     protected transient PetState dirtyState;
     protected transient PetState tiredState;
-    protected transient PetState sadState;
     protected transient PetState hungryState;
     protected transient PetState currentState;
 
@@ -104,6 +97,10 @@ abstract public class Pet implements IPet, IPetObservable {
         this.isEgg = true;
     }
 
+    public static int getMinimumStat(){
+        return MINIMUM_STAT;
+    }
+
     public String getName(){
         return this.name;
     }
@@ -120,9 +117,6 @@ abstract public class Pet implements IPet, IPetObservable {
 
     public GachaRarity getRarity() {
         return this.rarity;
-    }
-    public boolean needsPenalty(){
-        return this.needsPenalty;
     }
     public int getHygieneStat(){
         return this.hygiene;
@@ -144,9 +138,6 @@ abstract public class Pet implements IPet, IPetObservable {
     }
     public PetState getDirtyState(){
         return this.dirtyState;
-    }
-    public PetState getSadState(){
-        return this.sadState;
     }
     public PetState getTiredState(){
         return this.tiredState;
@@ -183,15 +174,6 @@ abstract public class Pet implements IPet, IPetObservable {
         this.isEgg = newEggStatus;
     }
 
-
-    public boolean applyPenalty(boolean needsPenalty){
-        if(needsPenalty){
-            lowerRandomStat(STAT_DECREMENT, currentState.getPenalizableStats());
-            return true;
-        }
-
-        return false;
-    }
 
     public void increaseStat(int amount, PetStatType type) {
         switch (type) {
@@ -332,15 +314,9 @@ abstract public class Pet implements IPet, IPetObservable {
             return this.normalState;
         }
     }
-    public void advanceState(){ // call this at the beginning of each turn?
-        setCurrentState(determineNextState());
-    }
 
-    public boolean checkIfNeedsPenalty(){
-        if(currentState != normalState && !isEgg){
-            return false;
-        }
-        return true;
+    public void advanceState(){
+        setCurrentState(determineNextState());
     }
 
     public void initializeStates() {
