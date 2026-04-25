@@ -40,11 +40,10 @@ public class ActionPanel extends JPanel implements PetObserver {
         primaryGrid.setOpaque(false);
         primaryGrid.setOpaque(false);
 
-        // for now, I use emojis in place of actual images because it feels strangely empty
-        feedBtn = buildActionButton("🍖  Feed", Theme.ACCENT_TERRA, "Feed your pet to restore hunger.");
-        playBtn = buildActionButton("🎾  Play", Theme.ACCENT_SAGE, "Play with your pet to boost happiness.");
-        restBtn = buildActionButton("🌙  Rest", Theme.ACCENT_PERIWINKLE, "Put your pet to sleep to restore energy.");
-        batheBtn = buildActionButton("🛁  Bathe", Theme.ACCENT_ROSE, "Give your pet a bath to be less dirty.");
+        feedBtn = buildActionButton("Feed", Theme.ACCENT_TERRA, "Feed your pet to restore hunger.");
+        playBtn = buildActionButton("Play", Theme.ACCENT_SAGE, "Play with your pet to boost happiness.");
+        restBtn = buildActionButton("Rest", Theme.ACCENT_PERIWINKLE, "Put your pet to sleep to restore energy.");
+        batheBtn = buildActionButton("Bathe", Theme.ACCENT_ROSE, "Give your pet a bath to be less dirty.");
 
         primaryGrid.add(feedBtn);
         primaryGrid.add(playBtn);
@@ -78,7 +77,6 @@ public class ActionPanel extends JPanel implements PetObserver {
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    // TODO: bind to the commands
     public void setFeedAction(ActionListener feedListener) {
         feedBtn.addActionListener(feedListener);
     }
@@ -95,7 +93,6 @@ public class ActionPanel extends JPanel implements PetObserver {
         batheBtn.addActionListener(batheListener);
     }
 
-    // TODO: configure which buttons given pet state
     public void applyPetState(PetState state) {
         setAllEnabled(true);
         switch (state) {
@@ -128,7 +125,6 @@ public class ActionPanel extends JPanel implements PetObserver {
     }
 
     // the helpers
-
     private buttonStyle buildActionButton(String label, Color color, String tooltip) {
         buttonStyle btn = new buttonStyle(label, color);
         btn.setToolTipText(tooltip);

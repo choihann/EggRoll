@@ -1,5 +1,7 @@
 package eggroll.ui;
 
+import eggroll.gacha.GachaRarity;
+
 import java.awt.*;
 
 public final class Theme {
@@ -24,18 +26,14 @@ public final class Theme {
 
 
     public static final Color RARITY_COMMON = new Color(0xA0A0A0);
-    public static final Color RARITY_UNCOMMON = new Color(0x6BAE72);
     public static final Color RARITY_RARE = new Color(0x5B8DD9);
     public static final Color RARITY_EPIC = new Color(0xA06DC8);
-    public static final Color RARITY_LEGENDARY = new Color(0xE8B84B);
 
     // pulled this from what looked bout common but in pastels
-    public static Color rarityColour(String rarity) {
-        return switch (rarity.toLowerCase()) {
-            case "uncommon" -> RARITY_UNCOMMON;
-            case "rare" -> RARITY_RARE;
-            case "epic" -> RARITY_EPIC;
-            case "legendary" -> RARITY_LEGENDARY;
+    public static Color rarityColor(GachaRarity rarity) {
+        return switch (rarity) {
+            case Rare -> RARITY_RARE;
+            case Epic -> RARITY_EPIC;
             default -> RARITY_COMMON;
         };
     }

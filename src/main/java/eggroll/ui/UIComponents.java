@@ -1,5 +1,7 @@
 package eggroll.ui;
 
+import eggroll.gacha.GachaRarity;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -211,10 +213,10 @@ public final class UIComponents {
         }
     }
 
-    public static JLabel rarityLabel(String rarity) {
+    public static JLabel rarityLabel(GachaRarity rarity) {
         JLabel label = new JLabel("● " + rarity);
         label.setFont(Theme.FONT_CAPTION);
-        label.setForeground(Theme.rarityColour(rarity));
+        label.setForeground(Theme.rarityColor(rarity));
         return label;
     }
 

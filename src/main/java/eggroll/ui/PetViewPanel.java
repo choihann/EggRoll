@@ -1,5 +1,6 @@
 package eggroll.ui;
 
+import eggroll.gacha.GachaRarity;
 import eggroll.observer.PetEvent;
 import eggroll.observer.PetObserver;
 import eggroll.pet.Pet;
@@ -19,7 +20,7 @@ public class PetViewPanel extends JPanel implements PetObserver {
 
     // TODO: replace with actual image and not emoji
     private JPanel spriteArea;
-    private JLabel spriteEmoji;
+    private JLabel spriteImage;
 
     private StatBar hungerBar;
     private StatBar happinessBar;
@@ -36,15 +37,22 @@ public class PetViewPanel extends JPanel implements PetObserver {
         JPanel identityPanel = buildIdentityPanel();
         add(identityPanel, BorderLayout.NORTH);
 
-        spriteEmoji = new JLabel("🥚", SwingConstants.CENTER);
-        spriteEmoji.setFont(new Font("Serif", Font.PLAIN, 96));
-        spriteEmoji.setToolTipText("Pet sprite (image placeholder)");
+        spriteImage = new JLabel(String.valueOf(SwingConstants.CENTER));
+        spriteImage.setToolTipText("Pet sprite");
+        ImageIcon eggIcon = ImageUtils.loadPetImage("egg", 180);
+        if (eggIcon != null) {
+            spriteImage.setIcon(eggIcon);
+            spriteImage.setText(null);
+        } else {
+            spriteImage.setText("🥚");
+            spriteImage.setFont(new Font("Serif", Font.PLAIN, 96));
+        }
 
         spriteArea = new RoundedPanel(Theme.BG_CARD);
         spriteArea.setLayout(new BorderLayout());
         spriteArea.setBorder(BorderFactory.createEmptyBorder(Theme.PAD_LG, Theme.PAD_XL, Theme.PAD_LG, Theme.PAD_XL));
         spriteArea.setMaximumSize(new Dimension(260, 260));
-        spriteArea.add(spriteEmoji, BorderLayout.CENTER);
+        spriteArea.add(spriteImage, BorderLayout.CENTER);
 
         stateLabel = new JLabel("Waiting to hatch…", SwingConstants.CENTER);
         stateLabel.setFont(Theme.FONT_BODY);
@@ -59,14 +67,12 @@ public class PetViewPanel extends JPanel implements PetObserver {
 
         add(buildStatsPanel(), BorderLayout.SOUTH);
 
-        // TODO: must a pet be selected?
         petNameLabel.setText("—");
         speciesLabel.setText("No pet selected");
     }
 
     // helpers
     private JPanel buildIdentityPanel() {
-        // TODO: Figure out what information will be displayed and remove placeholders
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
@@ -93,7 +99,7 @@ public class PetViewPanel extends JPanel implements PetObserver {
         JLabel sep2 = new JLabel("·");
         sep2.setForeground(Theme.TEXT_MUTED);
 
-        rarityLabel = UIComponents.rarityLabel("Common");
+        rarityLabel = UIComponents.rarityLabel(GachaRarity.Common);
 
         subRow.add(speciesLabel);
         subRow.add(sep1);
@@ -140,13 +146,21 @@ public class PetViewPanel extends JPanel implements PetObserver {
     }
 
 
-    public void updatePetIdentity(String name, String species, String stage, String rarity, String emoji) {
+    public void updatePetIdentity(String name, String species, String stage, GachaRarity rarity, String emoji) {
         petNameLabel.setText(name);
         speciesLabel.setText(species);
         stageLabel.setText(stage);
         rarityLabel.setText("● " + rarity);
-        rarityLabel.setForeground(Theme.rarityColour(rarity));
-        spriteEmoji.setText(emoji);
+        rarityLabel.setForeground(Theme.rarityColor(rarity));
+        ImageIcon icon = ImageUtils.loadPetImage(stage.equalsIgnoreCase("UNBORN") ? "egg" : species, 180);
+        if (icon != null) {
+            spriteImage.setIcon(icon);
+            spriteImage.setText(null);
+        } else {
+            spriteImage.setIcon(null);
+            spriteImage.setText(emoji); // fall back, just in case it doesn't load
+            spriteImage.setFont(new Font("Serif", Font.PLAIN, 96));
+        }
     }
 
     public void updateStats(int hunger, int happiness, int energy, int hygiene) {
@@ -179,6 +193,13 @@ public class PetViewPanel extends JPanel implements PetObserver {
                             scaledToHundred(pet.getHygieneStat(), pet)
                     );
                     stageLabel.setText(pet.getEvolutionStage().name());
+                    updatePetIdentity(
+                            pet.getName(),
+                            pet.getSpecies(),
+                            pet.getEvolutionStage().name(),
+                            pet.getRarity(),
+                            ""
+                    );
                 }
                 case STATE_CHANGED ->
                         updateStateLabel(pet.getPetState().getClass().getSimpleName().replace("State", ""));

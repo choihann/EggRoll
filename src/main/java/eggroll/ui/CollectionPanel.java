@@ -1,5 +1,6 @@
 package eggroll.ui;
 
+import eggroll.gacha.GachaRarity;
 import eggroll.ui.UIComponents.RoundedPanel;
 
 import javax.swing.*;
@@ -109,10 +110,17 @@ public class CollectionPanel extends JPanel {
             card.add(Box.createVerticalStrut(2));
         }
 
-        // TODO: replace with actual pet image and not emojis
-        JLabel emoji = new JLabel(data.emoji(), SwingConstants.CENTER);
-        emoji.setFont(new Font("Serif", Font.PLAIN, 36));
+        JLabel emoji = new JLabel(String.valueOf(SwingConstants.CENTER));
         emoji.setAlignmentX(Component.CENTER_ALIGNMENT);
+        String imageKey = (data.species() != null && !data.species().isBlank()) ? data.species() : data.stage();
+        ImageIcon icon = ImageUtils.loadPetImage(imageKey, 48);
+        if (icon != null) {
+            emoji.setIcon(icon);
+            emoji.setText(null);
+        } else {
+            emoji.setText(data.emoji());
+            emoji.setFont(new Font("Serif", Font.PLAIN, 36));
+        }
         card.add(emoji);
 
         card.add(Box.createVerticalStrut(Theme.PAD_SM));
@@ -131,7 +139,7 @@ public class CollectionPanel extends JPanel {
 
         card.add(Box.createVerticalStrut(2));
 
-        JLabel rarity = UIComponents.rarityLabel(data.rarity());
+        JLabel rarity = UIComponents.rarityLabel(GachaRarity.valueOf(data.rarity()));
         rarity.setAlignmentX(Component.CENTER_ALIGNMENT);
         card.add(rarity);
 

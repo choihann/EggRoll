@@ -144,7 +144,7 @@ public class GameController {
         window.navBarOverlay.refreshCoins(state.currency);
         Pet pet = activePet();
         if (pet != null) {
-            window.navBarOverlay.refreshActivePet(pet.getName(), "placeholder"); // TODO: replace placeholder
+            window.navBarOverlay.refreshActivePet(pet.getName(), null);
         } else {
             window.navBarOverlay.refreshActivePet(null, null);
         }
@@ -157,7 +157,7 @@ public class GameController {
                 pet.getName(),
                 pet.getSpecies(),
                 pet.getEvolutionStage().name(),
-                pet.getRarity().name(),
+                pet.getRarity(),
                 "🥚"
         );
         window.petView.updateStats(
